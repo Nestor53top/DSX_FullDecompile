@@ -1,0 +1,147 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>ModernWpf</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="designtime/resourcekeys.baml" />
+    <None Remove="styles/statusbar.baml" />
+    <None Remove="navigation/frame.baml" />
+    <None Remove="styles/expander.baml" />
+    <None Remove="styles/togglebutton.baml" />
+    <None Remove="styles/listbox.baml" />
+    <None Remove="styles/commandbar.baml" />
+    <None Remove="styles/resizegrip.baml" />
+    <None Remove="themes/listviewheaderitem.baml" />
+    <None Remove="styles/calendar.baml" />
+    <None Remove="styles/navigationbackbutton.baml" />
+    <None Remove="styles/combobox.baml" />
+    <None Remove="styles/textbox.baml" />
+    <None Remove="styles/tabcontrol.baml" />
+    <None Remove="styles/slider.baml" />
+    <None Remove="titlebar/titlebarbutton.baml" />
+    <None Remove="themeresources/highcontrast.baml" />
+    <None Remove="styles/label.baml" />
+    <None Remove="styles/datagrid.baml" />
+    <None Remove="styles/scrollbar.baml" />
+    <None Remove="styles/progressbar.baml" />
+    <None Remove="styles/hyperlink.baml" />
+    <None Remove="styles/repeatbutton.baml" />
+    <None Remove="controlsresources.baml" />
+    <None Remove="styles/listview.baml" />
+    <None Remove="styles/menuitem.baml" />
+    <None Remove="styles/richtextbox.baml" />
+    <None Remove="navigation/page.baml" />
+    <None Remove="themes/generic.baml" />
+    <None Remove="densitystyles/compact.baml" />
+    <None Remove="styles/navigationview.baml" />
+    <None Remove="themeresources/light.baml" />
+    <None Remove="styles/tooltip.baml" />
+    <None Remove="designtime/systemcolors.baml" />
+    <None Remove="styles/autosuggestbox.baml" />
+    <None Remove="styles/passwordbox.baml" />
+    <None Remove="styles/contextmenu.baml" />
+    <None Remove="themes/textcontextmenu.baml" />
+    <None Remove="styles/treeview.baml" />
+    <None Remove="styles/groupitem.baml" />
+    <None Remove="styles/timepicker.baml" />
+    <None Remove="styles/ratingcontrol.baml" />
+    <None Remove="themeresources/dark.baml" />
+    <None Remove="titlebar/titlebarcontrol.baml" />
+    <None Remove="styles/gridsplitter.baml" />
+    <None Remove="styles/button.baml" />
+    <None Remove="styles/radiobutton.baml" />
+    <None Remove="styles/textstyles.baml" />
+    <None Remove="themes/fonticonfallback.baml" />
+    <None Remove="styles/groupbox.baml" />
+    <None Remove="designtime/designtimeresources.baml" />
+    <None Remove="progressbar/progressbar.baml" />
+    <None Remove="styles/menu.baml" />
+    <None Remove="styles/datepicker.baml" />
+    <None Remove="styles/checkbox.baml" />
+    <None Remove="styles/pivot.baml" />
+    <None Remove="styles/scrollviewer.baml" />
+    <None Remove="styles/window.baml" />
+    <EmbeddedResource Include="designtime/resourcekeys.baml" LogicalName="designtime/resourcekeys.baml" />
+    <EmbeddedResource Include="styles/statusbar.baml" LogicalName="styles/statusbar.baml" />
+    <EmbeddedResource Include="navigation/frame.baml" LogicalName="navigation/frame.baml" />
+    <EmbeddedResource Include="styles/expander.baml" LogicalName="styles/expander.baml" />
+    <EmbeddedResource Include="styles/togglebutton.baml" LogicalName="styles/togglebutton.baml" />
+    <EmbeddedResource Include="styles/listbox.baml" LogicalName="styles/listbox.baml" />
+    <EmbeddedResource Include="styles/commandbar.baml" LogicalName="styles/commandbar.baml" />
+    <EmbeddedResource Include="styles/resizegrip.baml" LogicalName="styles/resizegrip.baml" />
+    <EmbeddedResource Include="themes/listviewheaderitem.baml" LogicalName="themes/listviewheaderitem.baml" />
+    <EmbeddedResource Include="styles/calendar.baml" LogicalName="styles/calendar.baml" />
+    <EmbeddedResource Include="styles/navigationbackbutton.baml" LogicalName="styles/navigationbackbutton.baml" />
+    <EmbeddedResource Include="styles/combobox.baml" LogicalName="styles/combobox.baml" />
+    <EmbeddedResource Include="styles/textbox.baml" LogicalName="styles/textbox.baml" />
+    <EmbeddedResource Include="styles/tabcontrol.baml" LogicalName="styles/tabcontrol.baml" />
+    <EmbeddedResource Include="styles/slider.baml" LogicalName="styles/slider.baml" />
+    <EmbeddedResource Include="titlebar/titlebarbutton.baml" LogicalName="titlebar/titlebarbutton.baml" />
+    <EmbeddedResource Include="themeresources/highcontrast.baml" LogicalName="themeresources/highcontrast.baml" />
+    <EmbeddedResource Include="styles/label.baml" LogicalName="styles/label.baml" />
+    <EmbeddedResource Include="styles/datagrid.baml" LogicalName="styles/datagrid.baml" />
+    <EmbeddedResource Include="styles/scrollbar.baml" LogicalName="styles/scrollbar.baml" />
+    <EmbeddedResource Include="styles/progressbar.baml" LogicalName="styles/progressbar.baml" />
+    <EmbeddedResource Include="styles/hyperlink.baml" LogicalName="styles/hyperlink.baml" />
+    <EmbeddedResource Include="styles/repeatbutton.baml" LogicalName="styles/repeatbutton.baml" />
+    <EmbeddedResource Include="controlsresources.baml" LogicalName="controlsresources.baml" />
+    <EmbeddedResource Include="styles/listview.baml" LogicalName="styles/listview.baml" />
+    <EmbeddedResource Include="styles/menuitem.baml" LogicalName="styles/menuitem.baml" />
+    <EmbeddedResource Include="styles/richtextbox.baml" LogicalName="styles/richtextbox.baml" />
+    <EmbeddedResource Include="navigation/page.baml" LogicalName="navigation/page.baml" />
+    <EmbeddedResource Include="themes/generic.baml" LogicalName="themes/generic.baml" />
+    <EmbeddedResource Include="densitystyles/compact.baml" LogicalName="densitystyles/compact.baml" />
+    <EmbeddedResource Include="styles/navigationview.baml" LogicalName="styles/navigationview.baml" />
+    <EmbeddedResource Include="themeresources/light.baml" LogicalName="themeresources/light.baml" />
+    <EmbeddedResource Include="styles/tooltip.baml" LogicalName="styles/tooltip.baml" />
+    <EmbeddedResource Include="designtime/systemcolors.baml" LogicalName="designtime/systemcolors.baml" />
+    <EmbeddedResource Include="styles/autosuggestbox.baml" LogicalName="styles/autosuggestbox.baml" />
+    <EmbeddedResource Include="styles/passwordbox.baml" LogicalName="styles/passwordbox.baml" />
+    <EmbeddedResource Include="styles/contextmenu.baml" LogicalName="styles/contextmenu.baml" />
+    <EmbeddedResource Include="themes/textcontextmenu.baml" LogicalName="themes/textcontextmenu.baml" />
+    <EmbeddedResource Include="styles/treeview.baml" LogicalName="styles/treeview.baml" />
+    <EmbeddedResource Include="styles/groupitem.baml" LogicalName="styles/groupitem.baml" />
+    <EmbeddedResource Include="styles/timepicker.baml" LogicalName="styles/timepicker.baml" />
+    <EmbeddedResource Include="styles/ratingcontrol.baml" LogicalName="styles/ratingcontrol.baml" />
+    <EmbeddedResource Include="themeresources/dark.baml" LogicalName="themeresources/dark.baml" />
+    <EmbeddedResource Include="titlebar/titlebarcontrol.baml" LogicalName="titlebar/titlebarcontrol.baml" />
+    <EmbeddedResource Include="styles/gridsplitter.baml" LogicalName="styles/gridsplitter.baml" />
+    <EmbeddedResource Include="styles/button.baml" LogicalName="styles/button.baml" />
+    <EmbeddedResource Include="styles/radiobutton.baml" LogicalName="styles/radiobutton.baml" />
+    <EmbeddedResource Include="styles/textstyles.baml" LogicalName="styles/textstyles.baml" />
+    <EmbeddedResource Include="themes/fonticonfallback.baml" LogicalName="themes/fonticonfallback.baml" />
+    <EmbeddedResource Include="styles/groupbox.baml" LogicalName="styles/groupbox.baml" />
+    <EmbeddedResource Include="designtime/designtimeresources.baml" LogicalName="designtime/designtimeresources.baml" />
+    <EmbeddedResource Include="progressbar/progressbar.baml" LogicalName="progressbar/progressbar.baml" />
+    <EmbeddedResource Include="styles/menu.baml" LogicalName="styles/menu.baml" />
+    <EmbeddedResource Include="styles/datepicker.baml" LogicalName="styles/datepicker.baml" />
+    <EmbeddedResource Include="styles/checkbox.baml" LogicalName="styles/checkbox.baml" />
+    <EmbeddedResource Include="styles/pivot.baml" LogicalName="styles/pivot.baml" />
+    <EmbeddedResource Include="styles/scrollviewer.baml" LogicalName="styles/scrollviewer.baml" />
+    <EmbeddedResource Include="styles/window.baml" LogicalName="styles/window.baml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Windows.Foundation.UniversalApiContract" />
+    <Reference Include="System.Runtime.WindowsRuntime" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="Windows.Foundation.FoundationContract" />
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

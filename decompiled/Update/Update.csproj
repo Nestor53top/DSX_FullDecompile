@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>Update.exe</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net45</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="ILRepack.List" />
+    <None Remove="NuGet.Authoring.nuspec.xsd" />
+    <EmbeddedResource Include="ILRepack.List" LogicalName="ILRepack.List" />
+    <EmbeddedResource Include="NuGet.Authoring.nuspec.xsd" LogicalName="NuGet.Authoring.nuspec.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.ComponentModel.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client" />
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Security">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.IO.Compression.FileSystem.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>ModernWpf.Controls</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="commandbar/commandbar.baml" />
+    <None Remove="commandbar/appbartogglebutton.baml" />
+    <None Remove="commandbar/appbarelementcontainer.baml" />
+    <None Remove="commandbarflyout/commandbarflyout.baml" />
+    <None Remove="progressring/progressring.baml" />
+    <None Remove="commandbar/appbarbutton.baml" />
+    <None Remove="listview/gridview.baml" />
+    <None Remove="toggleswitch/toggleswitch.baml" />
+    <None Remove="listview/listview.baml" />
+    <None Remove="radiobuttons/radiobuttons.baml" />
+    <None Remove="personpicture/personpicture.baml" />
+    <None Remove="radiomenuitem/radiomenuitem.baml" />
+    <None Remove="contentdialog/contentdialog.baml" />
+    <None Remove="themes/generic.baml" />
+    <None Remove="ratingcontrol/ratingcontrol.baml" />
+    <None Remove="menuflyout/menuflyout.baml" />
+    <None Remove="flyout/flyoutpresenter.baml" />
+    <None Remove="splitview/splitview.baml" />
+    <None Remove="hyperlinkbutton/hyperlinkbutton.baml" />
+    <None Remove="navigationview/navigationview.baml" />
+    <None Remove="splitbutton/splitbutton.baml" />
+    <None Remove="commandbar/appbarseparator.baml" />
+    <None Remove="dropdownbutton/dropdownbutton.baml" />
+    <None Remove="autosuggestbox/autosuggestbox.baml" />
+    <None Remove="numberbox/numberbox.baml" />
+    <EmbeddedResource Include="commandbar/commandbar.baml" LogicalName="commandbar/commandbar.baml" />
+    <EmbeddedResource Include="commandbar/appbartogglebutton.baml" LogicalName="commandbar/appbartogglebutton.baml" />
+    <EmbeddedResource Include="commandbar/appbarelementcontainer.baml" LogicalName="commandbar/appbarelementcontainer.baml" />
+    <EmbeddedResource Include="commandbarflyout/commandbarflyout.baml" LogicalName="commandbarflyout/commandbarflyout.baml" />
+    <EmbeddedResource Include="progressring/progressring.baml" LogicalName="progressring/progressring.baml" />
+    <EmbeddedResource Include="commandbar/appbarbutton.baml" LogicalName="commandbar/appbarbutton.baml" />
+    <EmbeddedResource Include="listview/gridview.baml" LogicalName="listview/gridview.baml" />
+    <EmbeddedResource Include="toggleswitch/toggleswitch.baml" LogicalName="toggleswitch/toggleswitch.baml" />
+    <EmbeddedResource Include="listview/listview.baml" LogicalName="listview/listview.baml" />
+    <EmbeddedResource Include="radiobuttons/radiobuttons.baml" LogicalName="radiobuttons/radiobuttons.baml" />
+    <EmbeddedResource Include="personpicture/personpicture.baml" LogicalName="personpicture/personpicture.baml" />
+    <EmbeddedResource Include="radiomenuitem/radiomenuitem.baml" LogicalName="radiomenuitem/radiomenuitem.baml" />
+    <EmbeddedResource Include="contentdialog/contentdialog.baml" LogicalName="contentdialog/contentdialog.baml" />
+    <EmbeddedResource Include="themes/generic.baml" LogicalName="themes/generic.baml" />
+    <EmbeddedResource Include="ratingcontrol/ratingcontrol.baml" LogicalName="ratingcontrol/ratingcontrol.baml" />
+    <EmbeddedResource Include="menuflyout/menuflyout.baml" LogicalName="menuflyout/menuflyout.baml" />
+    <EmbeddedResource Include="flyout/flyoutpresenter.baml" LogicalName="flyout/flyoutpresenter.baml" />
+    <EmbeddedResource Include="splitview/splitview.baml" LogicalName="splitview/splitview.baml" />
+    <EmbeddedResource Include="hyperlinkbutton/hyperlinkbutton.baml" LogicalName="hyperlinkbutton/hyperlinkbutton.baml" />
+    <EmbeddedResource Include="navigationview/navigationview.baml" LogicalName="navigationview/navigationview.baml" />
+    <EmbeddedResource Include="splitbutton/splitbutton.baml" LogicalName="splitbutton/splitbutton.baml" />
+    <EmbeddedResource Include="commandbar/appbarseparator.baml" LogicalName="commandbar/appbarseparator.baml" />
+    <EmbeddedResource Include="dropdownbutton/dropdownbutton.baml" LogicalName="dropdownbutton/dropdownbutton.baml" />
+    <EmbeddedResource Include="autosuggestbox/autosuggestbox.baml" LogicalName="autosuggestbox/autosuggestbox.baml" />
+    <EmbeddedResource Include="numberbox/numberbox.baml" LogicalName="numberbox/numberbox.baml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="ModernWpf">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/ModernWpf.dll</HintPath>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

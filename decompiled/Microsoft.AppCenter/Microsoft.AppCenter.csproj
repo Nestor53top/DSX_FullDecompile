@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.AppCenter</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <UseWindowsForms>True</UseWindowsForms>
+    <TargetFramework>net461</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="SQLitePCLRaw.core">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="SQLitePCLRaw.batteries_v2">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Deployment" />
+  </ItemGroup>
+</Project>

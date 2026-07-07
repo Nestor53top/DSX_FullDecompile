@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>NuGet.Squirrel</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net45</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="NuGet.Authoring.nuspec.xsd" />
+    <EmbeddedResource Include="NuGet.Authoring.nuspec.xsd" LogicalName="NuGet.Authoring.nuspec.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.ComponentModel.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client" />
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform" />
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Security.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

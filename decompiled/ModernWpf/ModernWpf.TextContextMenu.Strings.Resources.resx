@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="TextCommandKeyboardAcceleratorKeyItalic" xml:space="preserve"><value>I</value></data>
+  <data name="TextCommandLabelPaste" xml:space="preserve"><value>Paste</value></data>
+  <data name="ProofingMenuItemLabel" xml:space="preserve"><value>Proofing</value></data>
+  <data name="TextCommandDescriptionSelectAll" xml:space="preserve"><value>Select all content</value></data>
+  <data name="TextCommandLabelItalic" xml:space="preserve"><value>Italic</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeySelectAll" xml:space="preserve"><value>A</value></data>
+  <data name="TextCommandDescriptionCut" xml:space="preserve"><value>Remove the selected content and put it on the clipboard</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyRedo" xml:space="preserve"><value>Y</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyUndo" xml:space="preserve"><value>Z</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyCopy" xml:space="preserve"><value>C</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyBold" xml:space="preserve"><value>B</value></data>
+  <data name="TextCommandDescriptionUnderline" xml:space="preserve"><value>Underline the selected text</value></data>
+  <data name="TextCommandDescriptionPaste" xml:space="preserve"><value>Insert the contents of the clipboard at the current location</value></data>
+  <data name="TextCommandDescriptionUndo" xml:space="preserve"><value>Reverse the most recent action</value></data>
+  <data name="TextCommandDescriptionRedo" xml:space="preserve"><value>Repeat the most recently undone action</value></data>
+  <data name="TextCommandDescriptionBold" xml:space="preserve"><value>Bold the selected text</value></data>
+  <data name="TextCommandDescriptionCopy" xml:space="preserve"><value>Copy the selected content to the clipboard</value></data>
+  <data name="TextCommandLabelSelectAll" xml:space="preserve"><value>Select All</value></data>
+  <data name="TextCommandLabelUndo" xml:space="preserve"><value>Undo</value></data>
+  <data name="TextCommandLabelRedo" xml:space="preserve"><value>Redo</value></data>
+  <data name="TextCommandLabelBold" xml:space="preserve"><value>Bold</value></data>
+  <data name="TextCommandLabelCopy" xml:space="preserve"><value>Copy</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyUnderline" xml:space="preserve"><value>U</value></data>
+  <data name="TextCommandLabelCut" xml:space="preserve"><value>Cut</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyCut" xml:space="preserve"><value>X</value></data>
+  <data name="TextCommandLabelUnderline" xml:space="preserve"><value>Underline</value></data>
+  <data name="TextCommandDescriptionItalic" xml:space="preserve"><value>Italicize the selected text</value></data>
+  <data name="TextCommandKeyboardAcceleratorKeyPaste" xml:space="preserve"><value>V</value></data>
+  </root>

@@ -1,0 +1,172 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>DualSenseX</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net472</TargetFramework>
+    <Prefer32Bit>True</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="assets/gamepadicon_dark.png" />
+    <None Remove="assets/pp-logo.png" />
+    <None Remove="assets/downloadicon.png" />
+    <None Remove="progressbardownloaddialog.baml" />
+    <None Remove="assets/dualsensex_icon.png" />
+    <None Remove="assets/gamepadicon_light.png" />
+    <None Remove="assets/github_logo_white.png" />
+    <None Remove="assets/en-us-flag.png" />
+    <None Remove="popupcontentdialog.baml" />
+    <None Remove="assets/ko-fi_logo_rgb_darkbg.png" />
+    <None Remove="assets/dualsense_redcolor.png" />
+    <None Remove="assets/ko-fi_logo_rgb.png" />
+    <None Remove="assets/dualsense_blackcolor.png" />
+    <None Remove="updateappwindow.baml" />
+    <None Remove="assets/language_icon.png" />
+    <None Remove="message-20box/custommessageboxwindow.baml" />
+    <None Remove="resources/xboxfonthue.otf" />
+    <None Remove="dualsensex_icon.png" />
+    <None Remove="assets/discord-logo-wordmark-color.png" />
+    <None Remove="assets/backgroundimages/background2.jpg" />
+    <None Remove="assets/backgroundimages/background3.jpg" />
+    <None Remove="assets/backgroundimages/background6.jpg" />
+    <None Remove="assets/backgroundimages/background1.jpg" />
+    <None Remove="assets/backgroundimages/background4.jpg" />
+    <None Remove="assets/backgroundimages/background7.jpg" />
+    <None Remove="assets/backgroundimages/background5.jpg" />
+    <None Remove="assets/backgroundimages/background8.jpg" />
+    <None Remove="assets/backgroundimages/background9.jpg" />
+    <None Remove="contentdialogexample.baml" />
+    <None Remove="assets/infoicon_light.png" />
+    <None Remove="assets/github-mark-light-120px-plus.png" />
+    <None Remove="assets/xbox_controller_mockup_nolines_test.png" />
+    <None Remove="triggerinfowindow.baml" />
+    <None Remove="assets/dualsense_whitecolor.png" />
+    <None Remove="assets/batteryicons/battery0.ico" />
+    <None Remove="assets/github_logo.png" />
+    <None Remove="assets/gameslist_icon.png" />
+    <None Remove="assets/main.ico" />
+    <None Remove="main.baml" />
+    <None Remove="assets/github-mark-120px-plus.png" />
+    <None Remove="assets/infoicon_dark.png" />
+    <None Remove="assets/maingificon.gif" />
+    <None Remove="app.baml" />
+    <None Remove="resources/psfonthue.otf" />
+    <None Remove="buttonstyle.baml" />
+    <EmbeddedResource Include="assets/gamepadicon_dark.png" LogicalName="assets/gamepadicon_dark.png" />
+    <EmbeddedResource Include="assets/pp-logo.png" LogicalName="assets/pp-logo.png" />
+    <EmbeddedResource Include="assets/downloadicon.png" LogicalName="assets/downloadicon.png" />
+    <EmbeddedResource Include="progressbardownloaddialog.baml" LogicalName="progressbardownloaddialog.baml" />
+    <EmbeddedResource Include="assets/dualsensex_icon.png" LogicalName="assets/dualsensex_icon.png" />
+    <EmbeddedResource Include="assets/gamepadicon_light.png" LogicalName="assets/gamepadicon_light.png" />
+    <EmbeddedResource Include="assets/github_logo_white.png" LogicalName="assets/github_logo_white.png" />
+    <EmbeddedResource Include="assets/en-us-flag.png" LogicalName="assets/en-us-flag.png" />
+    <EmbeddedResource Include="popupcontentdialog.baml" LogicalName="popupcontentdialog.baml" />
+    <EmbeddedResource Include="assets/ko-fi_logo_rgb_darkbg.png" LogicalName="assets/ko-fi_logo_rgb_darkbg.png" />
+    <EmbeddedResource Include="assets/dualsense_redcolor.png" LogicalName="assets/dualsense_redcolor.png" />
+    <EmbeddedResource Include="assets/ko-fi_logo_rgb.png" LogicalName="assets/ko-fi_logo_rgb.png" />
+    <EmbeddedResource Include="assets/dualsense_blackcolor.png" LogicalName="assets/dualsense_blackcolor.png" />
+    <EmbeddedResource Include="updateappwindow.baml" LogicalName="updateappwindow.baml" />
+    <EmbeddedResource Include="assets/language_icon.png" LogicalName="assets/language_icon.png" />
+    <EmbeddedResource Include="message-20box/custommessageboxwindow.baml" LogicalName="message%20box/custommessageboxwindow.baml" />
+    <EmbeddedResource Include="resources/xboxfonthue.otf" LogicalName="resources/xboxfonthue.otf" />
+    <EmbeddedResource Include="dualsensex_icon.png" LogicalName="dualsensex_icon.png" />
+    <EmbeddedResource Include="assets/discord-logo-wordmark-color.png" LogicalName="assets/discord-logo+wordmark-color.png" />
+    <EmbeddedResource Include="assets/backgroundimages/background2.jpg" LogicalName="assets/backgroundimages/background2.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background3.jpg" LogicalName="assets/backgroundimages/background3.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background6.jpg" LogicalName="assets/backgroundimages/background6.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background1.jpg" LogicalName="assets/backgroundimages/background1.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background4.jpg" LogicalName="assets/backgroundimages/background4.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background7.jpg" LogicalName="assets/backgroundimages/background7.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background5.jpg" LogicalName="assets/backgroundimages/background5.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background8.jpg" LogicalName="assets/backgroundimages/background8.jpg" />
+    <EmbeddedResource Include="assets/backgroundimages/background9.jpg" LogicalName="assets/backgroundimages/background9.jpg" />
+    <EmbeddedResource Include="contentdialogexample.baml" LogicalName="contentdialogexample.baml" />
+    <EmbeddedResource Include="assets/infoicon_light.png" LogicalName="assets/infoicon_light.png" />
+    <EmbeddedResource Include="assets/github-mark-light-120px-plus.png" LogicalName="assets/github-mark-light-120px-plus.png" />
+    <EmbeddedResource Include="assets/xbox_controller_mockup_nolines_test.png" LogicalName="assets/xbox_controller_mockup_nolines_test.png" />
+    <EmbeddedResource Include="triggerinfowindow.baml" LogicalName="triggerinfowindow.baml" />
+    <EmbeddedResource Include="assets/dualsense_whitecolor.png" LogicalName="assets/dualsense_whitecolor.png" />
+    <EmbeddedResource Include="assets/batteryicons/battery0.ico" LogicalName="assets/batteryicons/battery0.ico" />
+    <EmbeddedResource Include="assets/github_logo.png" LogicalName="assets/github_logo.png" />
+    <EmbeddedResource Include="assets/gameslist_icon.png" LogicalName="assets/gameslist_icon.png" />
+    <EmbeddedResource Include="assets/main.ico" LogicalName="assets/main.ico" />
+    <EmbeddedResource Include="main.baml" LogicalName="main.baml" />
+    <EmbeddedResource Include="assets/github-mark-120px-plus.png" LogicalName="assets/github-mark-120px-plus.png" />
+    <EmbeddedResource Include="assets/infoicon_dark.png" LogicalName="assets/infoicon_dark.png" />
+    <EmbeddedResource Include="assets/maingificon.gif" LogicalName="assets/maingificon.gif" />
+    <EmbeddedResource Include="app.baml" LogicalName="app.baml" />
+    <EmbeddedResource Include="resources/psfonthue.otf" LogicalName="resources/psfonthue.otf" />
+    <EmbeddedResource Include="buttonstyle.baml" LogicalName="buttonstyle.baml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="ModernWpf">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/ModernWpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Nefarius.ViGEm.Client">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Nefarius.ViGEm.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows.Foundation.UniversalApiContract" />
+    <Reference Include="ModernWpf.Controls">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/ModernWpf.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="HidSharp">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/HidSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsInput">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/WindowsInput.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Core">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Wasapi">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.Wasapi.dll</HintPath>
+    </Reference>
+    <Reference Include="Hardcodet.NotifyIcon.Wpf">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Hardcodet.NotifyIcon.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="Squirrel">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Squirrel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Microsoft.AppCenter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter.Analytics">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Microsoft.AppCenter.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter.Crashes">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/Microsoft.AppCenter.Crashes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.IO.Compression.FileSystem.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

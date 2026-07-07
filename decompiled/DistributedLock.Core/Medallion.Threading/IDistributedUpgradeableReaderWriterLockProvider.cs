@@ -1,0 +1,6 @@
+namespace Medallion.Threading;
+
+public interface IDistributedUpgradeableReaderWriterLockProvider : IDistributedReaderWriterLockProvider
+{
+	IDistributedUpgradeableReaderWriterLock CreateUpgradeableReaderWriterLock(string name);
+}

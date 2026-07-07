@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>SQLitePCLRaw.batteries_v2</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="SQLitePCLRaw.core">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.nativelibrary">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/SQLitePCLRaw.nativelibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

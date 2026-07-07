@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Nefarius.ViGEm.Client</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="costura32.vigemclient.dll" />
+    <None Remove="costura64.vigemclient.dll" />
+    <None Remove="costura.costura.dll.compressed" />
+    <None Remove="costura.jetbrains.annotations.dll.compressed" />
+    <EmbeddedResource Include="costura32.vigemclient.dll" LogicalName="costura32.vigemclient.dll" />
+    <EmbeddedResource Include="costura64.vigemclient.dll" LogicalName="costura64.vigemclient.dll" />
+    <EmbeddedResource Include="costura.costura.dll.compressed" LogicalName="costura.costura.dll.compressed" />
+    <EmbeddedResource Include="costura.jetbrains.annotations.dll.compressed" LogicalName="costura.jetbrains.annotations.dll.compressed" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.9/System.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

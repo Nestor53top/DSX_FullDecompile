@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>NAudio</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="NAudio.Core">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.WinMM">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.WinMM.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Wasapi">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.Wasapi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

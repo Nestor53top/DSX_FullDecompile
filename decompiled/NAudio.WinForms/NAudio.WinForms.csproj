@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>NAudio.WinForms</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <UseWindowsForms>True</UseWindowsForms>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="NAudio.WinMM">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.WinMM.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Core">
+      <HintPath>extracted/dualsensex/nupkg/lib/net45/NAudio.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
