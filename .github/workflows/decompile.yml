@@ -51,76 +51,103 @@ jobs:
           echo "=== Binaries ready ==="
           ls -la binaries/
 
-      - name: Download dnSpy (net472 version, smallest)
+      - name: Download dnSpy
         run: |
           mkdir -p tools/dnSpy
           if [ ! -f tools/dnSpy/dnSpy-netframework.zip ]; then
             echo "Downloading dnSpy..."
             curl -L --retry 3 --max-time 300 -o tools/dnSpy/dnSpy-netframework.zip \
-              "https://github.com/dnSpy/dnSpy/releases/download/v6.1.8/dnSpy-netframework.zip"
+              "https://github.com/dnSpy/dnSpy/releases/download/v6.1.8/dnSpy-netframework.zip" || echo "dnSpy download failed, continuing without it"
           fi
-          echo "dnSpy downloaded"
-          ls -la tools/dnSpy/
 
-      - name: Extract DualSenseX installer (Squirrel format)
+      - name: Extract DualSenseX (Squirrel + NuGet nupkg)
         run: |
           mkdir -p extracted/dualsensex
-          # First extract the zip wrapper
+
+          # Step 1: Extract outer zip
           7z x binaries/DualSenseX-Setup.zip -oextracted/dualsensex -y
-          # Then extract the Squirrel .exe installer (contains NuGet-like package)
-          7z x extracted/dualsensex/DualSenseX-Setup.exe -oextracted/dualsensex/app -y
 
-      - name: List all extracted assemblies
-        run: |
-          echo "=== Extracted .NET assemblies ==="
-          find extracted/ -type f \( -name "*.exe" -o -name "*.dll" \) | sort
+          # Step 2: Extract Squirrel .exe - it's a PE with embedded zip in resources
+          # Squirrel stores the nupkg in .rsrc section
+          7z x extracted/dualsensex/DualSenseX-Setup.exe -oextracted/dualsensex/pe -y
 
-      - name: Decompile DualSenseX.exe (main application)
-        run: |
-          mkdir -p decompiled/DualSenseX
-          ilspycmd -p -o decompiled/DualSenseX \
-            extracted/dualsensex/app/lib/net45/DualSenseX.exe || echo "WARN: DualSenseX.exe decompile had issues"
+          # Step 3: Find the nupkg (NuGet package) inside
+          echo "=== Looking for nupkg ==="
+          find extracted/ -name "*.nupkg" -o -name "*.zip" | head -20
 
-      - name: Decompile all .dll libraries
-        run: |
-          for dll in extracted/dualsensex/app/lib/net45/*.dll; do
-            name=$(basename "$dll" .dll)
-            echo "--- Decompiling: $name ---"
-            mkdir -p "decompiled/$name"
-            if ilspycmd -p -o "decompiled/$name" "$dll" 2>&1; then
-              count=$(find "decompiled/$name" -name "*.cs" | wc -l)
-              echo "OK: $name -> $count .cs files"
-            else
-              echo "FAILED: $name (may be mixed/native assembly)"
-              echo "Failed to decompile - may contain native code" > "decompiled/$name/FAILED.txt"
-            fi
+          # The Squirrel .exe embeds a zip in its resources section
+          # Try to find it by looking at all zip files inside
+          find extracted/ -name "*.nupkg" | while read f; do
+            echo "Found nupkg: $f"
+            7z x "$f" -oextracted/dualsensex/nupkg -y
           done
 
-      - name: Decompile DualSenseX_ExecutionStub.exe
-        run: |
-          mkdir -p decompiled/DualSenseX_ExecutionStub
-          ilspycmd -p -o decompiled/DualSenseX_ExecutionStub \
-            extracted/dualsensex/app/lib/net45/DualSenseX_ExecutionStub.exe || echo "WARN: ExecutionStub failed"
+          # If no nupkg found, try extracting nested zips from the PE resources
+          if [ ! -d extracted/dualsensex/nupkg ]; then
+            echo "No nupkg found, extracting from PE resources..."
+            find extracted/dualsensex/pe -type f | while read f; do
+              filetype=$(file -b "$f" 2>/dev/null)
+              if echo "$filetype" | grep -qi "zip\|archive"; then
+                echo "Extracting nested archive: $f"
+                7z x "$f" -oextracted/dualsensex/nested -y 2>/dev/null || true
+              fi
+            done
+          fi
 
-      - name: Info for ViGEmBus and HidHide (C++ drivers, not .NET)
+          echo "=== Final extracted structure ==="
+          find extracted/ -type f \( -name "*.exe" -o -name "*.dll" -o -name "*.nupkg" \) | sort
+
+      - name: Find and extract all .NET assemblies
+        run: |
+          echo "=== Searching for all .dll and .exe files ==="
+          find extracted/ -type f \( -name "*.dll" -o -name "*.exe" \) | sort > /tmp/all_assemblies.txt
+          cat /tmp/all_assemblies.txt
+
+          echo ""
+          echo "=== Total assemblies found: $(wc -l < /tmp/all_assemblies.txt) ==="
+
+      - name: Decompile all .NET assemblies with ilspycmd
+        run: |
+          total_cs=0
+          while IFS= read -r assembly; do
+            name=$(basename "$assembly" | sed 's/\.[^.]*$//')
+            echo "--- Decompiling: $name ($assembly) ---"
+            mkdir -p "decompiled/$name"
+            if ilspycmd -p -o "decompiled/$name" "$assembly" 2>&1; then
+              count=$(find "decompiled/$name" -name "*.cs" 2>/dev/null | wc -l)
+              echo "OK: $name -> $count .cs files"
+              total_cs=$((total_cs + count))
+            else
+              echo "FAILED: $name"
+              echo "Failed to decompile" > "decompiled/$name/FAILED.txt"
+            fi
+          done < /tmp/all_assemblies.txt
+          echo ""
+          echo "=== TOTAL .cs files decompiled: $total_cs ==="
+
+      - name: Info for ViGEmBus and HidHide (C++ drivers)
         run: |
           mkdir -p decompiled/ViGEmBus
-          echo "ViGEmBus is a C++ Windows kernel-mode driver (WDM)." > decompiled/ViGEmBus/README.txt
-          echo "It cannot be decompiled with ilspycmd (not .NET)." >> decompiled/ViGEmBus/README.txt
-          echo "Use Ghidra or IDA Pro for C++ decompilation." >> decompiled/ViGEmBus/README.txt
-          strings binaries/ViGEmBus_Setup.exe | head -100 > decompiled/ViGEmBus/strings_sample.txt
+          cat > decompiled/ViGEmBus/README.txt << 'EOF'
+          ViGEmBus is a C++ Windows kernel-mode driver (WDM).
+          It cannot be decompiled with ilspycmd (not .NET).
+          Use Ghidra or IDA Pro for C++ decompilation.
+          GitHub: https://github.com/ViGEm/ViGEmBus
+          EOF
 
           mkdir -p decompiled/HidHide
-          echo "HidHide is a C++ Windows kernel-mode driver (WDF)." > decompiled/HidHide/README.txt
-          echo "It cannot be decompiled with ilspycmd (not .NET)." >> decompiled/HidHide/README.txt
-          echo "Use Ghidra or IDA Pro for C++ decompilation." >> decompiled/HidHide/README.txt
-          strings binaries/HidHide_x64.exe | head -100 > decompiled/HidHide/strings_sample.txt
+          cat > decompiled/HidHide/README.txt << 'EOF'
+          HidHide is a C++ Windows kernel-mode driver (WDF).
+          It cannot be decompiled with ilspycmd (not .NET).
+          Use Ghidra or IDA Pro for C++ decompilation.
+          GitHub: https://github.com/ViGEm/HidHide
+          EOF
 
-      - name: Count results
+      - name: Count and summarize results
         run: |
-          echo "==============================="
+          echo "========================================"
           echo "DECOMPILATION RESULTS"
-          echo "==============================="
+          echo "========================================"
           total=$(find decompiled/ -name "*.cs" | wc -l)
           echo "Total .cs files: $total"
           echo ""
@@ -128,8 +155,11 @@ jobs:
           for dir in decompiled/*/; do
             name=$(basename "$dir")
             count=$(find "$dir" -name "*.cs" 2>/dev/null | wc -l)
-            echo "  $name: $count .cs files"
+            if [ "$count" -gt 0 ]; then
+              echo "  $name: $count .cs files"
+            fi
           done
+          echo "========================================"
 
       - name: Commit and push results
         run: |
@@ -139,6 +169,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-decompile: $(date -u +%Y-%m-%d) - $(find decompiled/ -name '*.cs' | wc -l) .cs files"
+            count=$(find decompiled/ -name "*.cs" 2>/dev/null | wc -l)
+            git commit -m "Auto-decompile: $(date -u +%Y-%m-%d) - $count .cs files"
             git push
           fi
