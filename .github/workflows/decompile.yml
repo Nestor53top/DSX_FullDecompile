@@ -1,0 +1,144 @@
+name: Decompile DSX Binaries
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decompile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install ilspycmd
+        run: dotnet tool install -g ilspycmd
+
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Install 7zip
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
+      - name: Download binaries (if not present)
+        run: |
+          mkdir -p binaries
+          if [ ! -f binaries/DualSenseX-Setup.zip ]; then
+            echo "Downloading DualSenseX-Setup.zip..."
+            curl -L -o binaries/DualSenseX-Setup.zip \
+              "https://github.com/Paliverse/DualSenseX/releases/download/1.4.9/DualSenseX-Setup.zip"
+          fi
+          if [ ! -f binaries/ViGEmBus_Setup.exe ]; then
+            echo "Downloading ViGEmBus_Setup.exe..."
+            curl -L -o binaries/ViGEmBus_Setup.exe \
+              "https://github.com/nefarius/ViGEmBus/releases/download/v1.22.0/ViGEmBus_1.22.0_x64_x86_arm64.exe"
+          fi
+          if [ ! -f binaries/HidHide_x64.exe ]; then
+            echo "Downloading HidHide_x64.exe..."
+            curl -L -o binaries/HidHide_x64.exe \
+              "https://github.com/nefarius/HidHide/releases/download/v1.5.230.0/HidHide_1.5.230_x64.exe"
+          fi
+          echo "=== Binaries ready ==="
+          ls -la binaries/
+
+      - name: Download dnSpy (net472 version, smallest)
+        run: |
+          mkdir -p tools/dnSpy
+          if [ ! -f tools/dnSpy/dnSpy-netframework.zip ]; then
+            echo "Downloading dnSpy..."
+            curl -L --retry 3 --max-time 300 -o tools/dnSpy/dnSpy-netframework.zip \
+              "https://github.com/dnSpy/dnSpy/releases/download/v6.1.8/dnSpy-netframework.zip"
+          fi
+          echo "dnSpy downloaded"
+          ls -la tools/dnSpy/
+
+      - name: Extract DualSenseX installer (Squirrel format)
+        run: |
+          mkdir -p extracted/dualsensex
+          # First extract the zip wrapper
+          7z x binaries/DualSenseX-Setup.zip -oextracted/dualsensex -y
+          # Then extract the Squirrel .exe installer (contains NuGet-like package)
+          7z x extracted/dualsensex/DualSenseX-Setup.exe -oextracted/dualsensex/app -y
+
+      - name: List all extracted assemblies
+        run: |
+          echo "=== Extracted .NET assemblies ==="
+          find extracted/ -type f \( -name "*.exe" -o -name "*.dll" \) | sort
+
+      - name: Decompile DualSenseX.exe (main application)
+        run: |
+          mkdir -p decompiled/DualSenseX
+          ilspycmd -p -o decompiled/DualSenseX \
+            extracted/dualsensex/app/lib/net45/DualSenseX.exe || echo "WARN: DualSenseX.exe decompile had issues"
+
+      - name: Decompile all .dll libraries
+        run: |
+          for dll in extracted/dualsensex/app/lib/net45/*.dll; do
+            name=$(basename "$dll" .dll)
+            echo "--- Decompiling: $name ---"
+            mkdir -p "decompiled/$name"
+            if ilspycmd -p -o "decompiled/$name" "$dll" 2>&1; then
+              count=$(find "decompiled/$name" -name "*.cs" | wc -l)
+              echo "OK: $name -> $count .cs files"
+            else
+              echo "FAILED: $name (may be mixed/native assembly)"
+              echo "Failed to decompile - may contain native code" > "decompiled/$name/FAILED.txt"
+            fi
+          done
+
+      - name: Decompile DualSenseX_ExecutionStub.exe
+        run: |
+          mkdir -p decompiled/DualSenseX_ExecutionStub
+          ilspycmd -p -o decompiled/DualSenseX_ExecutionStub \
+            extracted/dualsensex/app/lib/net45/DualSenseX_ExecutionStub.exe || echo "WARN: ExecutionStub failed"
+
+      - name: Info for ViGEmBus and HidHide (C++ drivers, not .NET)
+        run: |
+          mkdir -p decompiled/ViGEmBus
+          echo "ViGEmBus is a C++ Windows kernel-mode driver (WDM)." > decompiled/ViGEmBus/README.txt
+          echo "It cannot be decompiled with ilspycmd (not .NET)." >> decompiled/ViGEmBus/README.txt
+          echo "Use Ghidra or IDA Pro for C++ decompilation." >> decompiled/ViGEmBus/README.txt
+          strings binaries/ViGEmBus_Setup.exe | head -100 > decompiled/ViGEmBus/strings_sample.txt
+
+          mkdir -p decompiled/HidHide
+          echo "HidHide is a C++ Windows kernel-mode driver (WDF)." > decompiled/HidHide/README.txt
+          echo "It cannot be decompiled with ilspycmd (not .NET)." >> decompiled/HidHide/README.txt
+          echo "Use Ghidra or IDA Pro for C++ decompilation." >> decompiled/HidHide/README.txt
+          strings binaries/HidHide_x64.exe | head -100 > decompiled/HidHide/strings_sample.txt
+
+      - name: Count results
+        run: |
+          echo "==============================="
+          echo "DECOMPILATION RESULTS"
+          echo "==============================="
+          total=$(find decompiled/ -name "*.cs" | wc -l)
+          echo "Total .cs files: $total"
+          echo ""
+          echo "By project:"
+          for dir in decompiled/*/; do
+            name=$(basename "$dir")
+            count=$(find "$dir" -name "*.cs" 2>/dev/null | wc -l)
+            echo "  $name: $count .cs files"
+          done
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-decompile: $(date -u +%Y-%m-%d) - $(find decompiled/ -name '*.cs' | wc -l) .cs files"
+            git push
+          fi
