@@ -1,0 +1,100 @@
+!This program cannot be run in DOS mode.
+\pRich
+.text
+`.rdata
+@.data
+.rsrc
+@.reloc
+hdea
+h4:s
+hdea
+hh3b
+h bj
+h8bj
+h\bj
+j	hpbj
+h\Yj
+htYj
+j	h cj
+h4cj
+hLcj
+htcj
+hp[j
+hdea
+hdea
+hdea
+D$$,
+D$00
+D$<p
+D$`X
+D$$4dj
+D$0pdj
+D$T$ej
+D$``ej
+hdea
+=UUU
+h bj
+h-Te
+j h 
+h/|f
+h'Pg
+hl	j
+hl	j
+hl	j
+hl	j
+hl	j
+hl	j
+hl	j
+h Gl
+h(Ol
+hl	j
+hl	j
+hl	j
+h(Ol
+hl	j
+hl	j
+hl	j
+hx*l
+h(Ol
+hl	j
+hl	j
+hl	j
+hl	j
+hl	j
+hl	j
+h`Ol
+hl	j
+hl	j
+hl	j
+hlOl
+ht5k
+hl	j
+hl	j
+hl	j
+h,Hl
+h`Ol
+h0Ol
+h$6l
+hl	j
+hl	j
+h`Ol
+hl	j
+hl	j
+hl	j
+hTOl
+h$6l
+hl	j
+hl	j
+hTOl
+h$6l
+hl	j
+hl	j
+h`Ol
+h$6l
+hl	j
+hl	j
+h`Il
+hxOl
+hl	j
+hl	j
+hl	j

@@ -1,0 +1,100 @@
+!This program cannot be run in DOS mode.
+Rich
+.text
+`.rdata
+@.data
+.didat
+.rsrc
+@.reloc
+h`li
+hXgl
+hpli
+h/Xc
+jShpgl
+hPmi
+h`mi
+h pi
+h0pi
+h@pi
+hPpi
+h`pi
+hppi
+j	hx
+h qi
+h0qi
+h@qi
+hPqi
+j	h(
+h`qi
+hpqi
+h ri
+h@ri
+hPsi
+D$$|
+D$TP
+D$x<
+h`si
+D$$<
+D$0x
+D$T,
+D$`h
+hpsi
+hPui
+h`ui
+hpui
+=UUU
+hPvi
+h0wi
+hpyi
+h@zi
+hPzi
+h#=g
+j h 
+h0{i
+h@{i
+hXgl
+h/>h
+PQVW
+j	hh
+j	hh
+h4ym
+j	hh
+j	hh
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+hxwn
+Fhxwn
+hxwn
+hxwn
+hHLm
+hHLm
+h8tm
+h<|n
+h8tm
