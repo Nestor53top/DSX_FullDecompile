@@ -155,18 +155,10 @@ jobs:
           dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release
           
           echo "=== Converting all .baml files to .xaml ==="
-          BAML_COUNT=0
-          XAML_COUNT=0
-          FAILED_COUNT=0
+          # Baml2Xaml reads path from Console.ReadLine(), not from args
           find decompiled/ -name "*.baml" | while read baml_file; do
             echo "Converting: $baml_file"
-            if dotnet run --project tools/Baml2Xaml/Baml2Xaml.csproj -- "$baml_file" 2>&1; then
-              XAML_COUNT=$((XAML_COUNT+1))
-            else
-              echo "  FAILED: $baml_file"
-              FAILED_COUNT=$((FAILED_COUNT+1))
-            fi
-            BAML_COUNT=$((BAML_COUNT+1))
+            echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1 || echo "  FAILED: $baml_file"
           done
           
           echo "=== Results ==="
