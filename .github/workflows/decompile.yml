@@ -145,106 +145,133 @@ jobs:
 
       - name: Extract XAML from BAML resources
         run: |
-          echo "=== Extracting XAML from BAML resources ==="
+          echo "=== Extracting XAML file references from binary ==="
           
-          # Create a C# project to extract BAML
-          mkdir -p tools/baml-extractor
-          cd tools/baml-extractor
+          # Create Python script to find XAML references
+          cat > extract_xaml_refs.py << 'PYTHON'
+          import struct
+          import os
+          import sys
           
-          cat > BamlExtractor.csproj << 'PROJ'
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <OutputType>Exe</OutputType>
-              <TargetFramework>net8.0</TargetFramework>
-            </PropertyGroup>
-            <ItemGroup>
-              <PackageReference Include="ICSharpCode.Decompiler" Version="8.2.0.7535" />
-            </ItemGroup>
-          </Project>
-          PROJ
-          
-          cat > Program.cs << 'CSHARP'
-          using System;
-          using System.IO;
-          using ICSharpCode.Decompiler;
-          using ICSharpCode.Decompiler.CSharp;
-          using ICSharpCode.Decompiler.TypeSystem;
-          
-          class Program
-          {
-              static void Main(string[] args)
-              {
-                  if (args.Length < 2)
-                  {
-                      Console.WriteLine("Usage: BamlExtractor <assembly.dll> <output-dir>");
-                      return;
-                  }
-                  
-                  string assemblyPath = args[0];
-                  string outputDir = args[1];
-                  
-                  try
-                  {
-                      var decompiler = new CSharpDecompiler(assemblyPath, new DecompilerSettings());
+          def find_xaml_refs(exe_path, output_dir):
+              """Find XAML file references in .NET assembly"""
+              with open(exe_path, 'rb') as f:
+                  data = f.read()
+              
+              # XAML file names to search for (UTF-16LE encoded)
+              xaml_files = [
+                  'Main.xaml',
+                  'app.xaml',
+                  'custommessageboxwindow.xaml',
+                  'popupcontentdialog.xaml',
+                  'progressbardownloaddialog.xaml',
+                  'contentdialogexample.xaml',
+                  'triggerinfowindow.xaml',
+                  'updateappwindow.xaml',
+              ]
+              
+              found_xaml = []
+              
+              for xaml_name in xaml_files:
+                  # Search for the name in both ASCII and UTF-16LE
+                  for encoding in ['ascii', 'utf-16-le']:
+                      if encoding == 'ascii':
+                          search_bytes = xaml_name.encode('ascii')
+                      else:
+                          search_bytes = xaml_name.encode('utf-16-le')
                       
-                      // Get all XAML resources
-                      var resourceNames = decompiler.TypeSystem.MainModule.Resources
-                          .Where(r => r.Name.EndsWith(".g.resources"))
-                          .ToList();
-                      
-                      Console.WriteLine($"Found {resourceNames.Count} XAML resource files");
-                      
-                      foreach (var resource in resourceNames)
-                      {
-                          Console.WriteLine($"Processing: {resource.Name}");
+                      idx = 0
+                      while True:
+                          idx = data.find(search_bytes, idx)
+                          if idx == -1:
+                              break
                           
-                          // Try to decompile the resource
-                          try
-                          {
-                              using var stream = resource.CreateStream();
-                              using var reader = new BinaryReader(stream);
-                              
-                              // Read resource header
-                              int version = reader.ReadInt32();
-                              int numHeaders = reader.ReadInt32();
-                              
-                              Console.WriteLine($"  Version: {version}, Headers: {numHeaders}");
-                              
-                              // For now, just save the raw resource
-                              string resourceName = resource.Name.Replace(".g.resources", "");
-                              string outputPath = Path.Combine(outputDir, $"{ resourceName}_resources.bin");
-                              
-                              stream.Position = 0;
-                              using var fileStream = File.Create(outputPath);
-                              stream.CopyTo(fileStream);
-                              
-                              Console.WriteLine($"  Saved to: {outputPath}");
-                          }
-                          catch (Exception ex)
-                          {
-                              Console.WriteLine($"  Error: {ex.Message}");
-                          }
-                      }
-                  }
-                  catch (Exception ex)
-                  {
-                      Console.WriteLine($"Error: {ex.Message}");
-                  }
-              }
-          }
-          CSHARP
+                          # Get context around the match
+                          start = max(0, idx - 50)
+                          end = min(len(data), idx + len(search_bytes) + 100)
+                          context = data[start:end]
+                          
+                          # Check if this looks like a XAML reference
+                          if b'component/' in context or b'Component/' in context or xaml_name.encode() in context:
+                              found_xaml.append({
+                                  'name': xaml_name,
+                                  'offset': idx,
+                                  'context': context.decode('ascii', errors='replace')
+                              })
+                          
+                          idx += 1
+              
+              return found_xaml
           
-          # Build and run
-          dotnet build -c Release
+          if __name__ == '__main__':
+              exe_path = sys.argv[1] if len(sys.argv) > 1 else 'DualSenseX.exe'
+              output_dir = sys.argv[2] if len(sys.argv) > 2 else '.'
+              
+              if not os.path.exists(exe_path):
+                  print(f"File not found: {exe_path}")
+                  sys.exit(1)
+              
+              os.makedirs(output_dir, exist_ok=True)
+              
+              refs = find_xaml_refs(exe_path, output_dir)
+              
+              print(f"\nFound {len(refs)} XAML references:")
+              for ref in refs:
+                  print(f"  {ref['name']} at offset {ref['offset']}")
+                  print(f"    Context: {ref['context'][:100]}")
           
-          # Find all assemblies and extract XAML
-          cd ../..
-          find extracted/ -type f \( -name "*.dll" -o -name "*.exe" \) | while read assembly; do
-            name=$(basename "$assembly" | sed 's/\.[^.]*$//')
-            echo "Extracting XAML from: $name"
-            mkdir -p "decompiled/$name/xaml"
-            dotnet run --project tools/baml-extractor -- "$assembly" "decompiled/$name/xaml" 2>&1 || true
-          done
+          PYTHON
+          
+          # Find DualSenseX.exe
+          DUALSENSEX_EXE=$(find extracted/ -name "DualSenseX.exe" -type f | head -1)
+          
+          if [ -z "$DUALSENSEX_EXE" ]; then
+            echo "DualSenseX.exe not found!"
+            exit 1
+          fi
+          
+          echo "Found DualSenseX.exe: $DUALSENSEX_EXE"
+          
+          # Extract XAML references
+          mkdir -p decompiled/DualSenseX/xaml
+          python3 extract_xaml_refs.py "$DUALSENSEX_EXE" "decompiled/DualSenseX/xaml"
+          
+          # Also try to find BAML data
+          echo ""
+          echo "=== Searching for BAML data patterns ==="
+          
+          # Look for common BAML signatures
+          python3 << 'EOF'
+          import struct
+          
+          exe_path = "$DUALSENSEX_EXE"
+          with open(exe_path, 'rb') as f:
+              data = f.read()
+          
+          # BAML header signature (version 1, reader type 1)
+          baml_header = b'\x01\x00\x00\x00\x01\x00\x00\x00'
+          
+          idx = 0
+          baml_count = 0
+          while True:
+              idx = data.find(baml_header, idx)
+              if idx == -1:
+                  break
+              
+              # Check if this looks like valid BAML
+              # Read a few more bytes to verify
+              if idx + 16 < len(data):
+                  next_bytes = data[idx+8:idx+16]
+                  # BAML records start after header
+                  print(f"Potential BAML at offset {idx} (0x{idx:x})")
+                  print(f"  Header: {data[idx:idx+8].hex()}")
+                  print(f"  Next: {next_bytes.hex()}")
+                  baml_count += 1
+              
+              idx += 1
+          
+          print(f"\nFound {baml_count} potential BAML sections")
+          EOF
           
           echo "=== XAML extraction complete ==="
 
