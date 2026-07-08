@@ -154,16 +154,27 @@ jobs:
           echo "=== Building Baml2Xaml ==="
           dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release
           
+          echo "=== Testing on one BAML file first ==="
+          TEST_BAML=$(find decompiled/ -name "*.baml" | head -1)
+          echo "Test file: $TEST_BAML"
+          echo "$TEST_BAML" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1
+          echo "Exit code: $?"
+          
           echo "=== Converting all .baml files to .xaml ==="
-          # Baml2Xaml reads path from Console.ReadLine(), not from args
+          SUCCESS=0
+          FAIL=0
           find decompiled/ -name "*.baml" | while read baml_file; do
             echo "Converting: $baml_file"
-            echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1 || echo "  FAILED: $baml_file"
+            if echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1; then
+              echo "  OK"
+            else
+              echo "  FAILED: exit $?"
+            fi
           done
           
           echo "=== Results ==="
-          echo "BAML files found: $(find decompiled/ -name '*.baml' | wc -l)"
-          echo "XAML files created: $(find decompiled/ -name '*.xaml' | wc -l)"
+          echo "BAML files: $(find decompiled/ -name '*.baml' | wc -l)"
+          echo "XAML files: $(find decompiled/ -name '*.xaml' | wc -l)"
           echo "=== Done ==="
 
       - name: Count and summarize results
