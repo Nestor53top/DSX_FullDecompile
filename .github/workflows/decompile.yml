@@ -143,69 +143,56 @@ jobs:
           GitHub: https://github.com/ViGEm/HidHide
           EOF
 
-      - name: Convert BAML to XAML using Baml2Xaml
+      - name: Convert BAML to XAML
         run: |
-          echo "=== Cloning Baml2Xaml converter ==="
-          git clone https://github.com/nuloperrito/Baml2Xaml.git tools/Baml2Xaml
+          echo "=== Creating BAML converter ==="
+          mkdir -p tools/baml2xaml
           
-          echo "=== Fixing source code ==="
-          # Retarget to net8.0
-          sed -i 's|<TargetFramework>netcoreapp3.1</TargetFramework>|<TargetFramework>net8.0</TargetFramework>|' tools/Baml2Xaml/Baml2Xaml.csproj
-          # Suppress CS0108 (duplicate using) and other warnings
-          sed -i 's|</PropertyGroup>|<NoWarn>CS0108;CS0105</NoWarn><TreatWarningsAsErrors>false</TreatWarningsAsErrors></PropertyGroup>|' tools/Baml2Xaml/Baml2Xaml.csproj
-          # Remove duplicate using System;
-          python3 -c "
-          with open('tools/Baml2Xaml/Program.cs', 'r') as f:
-              lines = f.readlines()
-          seen_using = False
-          new_lines = []
-          for line in lines:
-              if line.strip() == 'using System;' and not seen_using:
-                  seen_using = True
-                  new_lines.append(line)
-              elif line.strip() == 'using System;' and seen_using:
-                  continue  # skip duplicate
-              else:
-                  new_lines.append(line)
-          with open('tools/Baml2Xaml/Program.cs', 'w') as f:
-              f.writelines(new_lines)
-          print('Fixed duplicate using directives')
-          "
+          cat > tools/baml2xaml/Baml2Xaml.csproj << 'PROJ'
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <OutputType>Exe</OutputType>
+              <TargetFramework>net8.0</TargetFramework>
+              <NoWarn>CS0108;CS0105;CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8625</NoWarn>
+            </PropertyGroup>
+          </Project>
+          PROJ
           
-          echo "=== Building Baml2Xaml ==="
-          dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release 2>&1
+          echo "=== Downloading Baml2Xaml source ==="
+          curl -sL -o tools/baml2xaml/Program.cs https://raw.githubusercontent.com/nuloperrito/Baml2Xaml/main/Program.cs
+          wc -l tools/baml2xaml/Program.cs
+          
+          echo "=== Building ==="
+          cd tools/baml2xaml
+          dotnet build -c Release 2>&1
           BUILD_EXIT=$?
+          cd ../..
           echo "Build exit: $BUILD_EXIT"
           
           if [ $BUILD_EXIT -ne 0 ]; then
-            echo "Build FAILED! Aborting."
+            echo "Build FAILED!"
             exit 1
           fi
           
-          echo "=== Testing on one BAML file first ==="
+          echo "=== Testing on one BAML file ==="
           TEST_BAML=$(find decompiled/ -name "*.baml" | head -1)
-          echo "Test file: $TEST_BAML"
-          echo "$TEST_BAML" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1
-          TEST_EXIT=$?
-          echo "Test exit code: $TEST_EXIT"
-          
-          # Check if xaml was created
+          echo "Test: $TEST_BAML"
+          echo "$TEST_BAML" | dotnet tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.dll 2>&1 || true
           TEST_XAML="${TEST_BAML%.baml}.xaml"
           if [ -f "$TEST_XAML" ]; then
-            echo "SUCCESS! Created: $TEST_XAML ($(wc -c < "$TEST_XAML") bytes)"
-            echo "=== Converting ALL .baml files ==="
-            find decompiled/ -name "*.baml" | while read baml_file; do
-              echo "Converting: $baml_file"
-              echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1 || echo "  FAILED"
-            done
+            echo "SUCCESS! $(wc -c < "$TEST_XAML") bytes"
           else
-            echo "FAILED! No xaml file created at: $TEST_XAML"
+            echo "FAILED - no output"
           fi
           
+          echo "=== Converting ALL .baml files ==="
+          find decompiled/ -name "*.baml" | while read f; do
+            echo "$f" | dotnet tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.dll 2>/dev/null || true
+          done
+          
           echo "=== Results ==="
-          echo "BAML files: $(find decompiled/ -name '*.baml' | wc -l)"
-          echo "XAML files: $(find decompiled/ -name '*.xaml' | wc -l)"
-          echo "=== Done ==="
+          echo "BAML: $(find decompiled/ -name '*.baml' | wc -l)"
+          echo "XAML: $(find decompiled/ -name '*.xaml' | wc -l)"
 
       - name: Count and summarize results
         run: |
