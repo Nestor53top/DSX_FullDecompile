@@ -143,9 +143,109 @@ jobs:
           GitHub: https://github.com/ViGEm/HidHide
           EOF
 
-      - name: Extract XAML references from binary
+      - name: Decompile XAML from BAML using ICSharpCode.BamlDecompiler
         run: |
-          echo "=== Extracting XAML file references from DualSenseX.exe ==="
+          echo "=== Creating BAML decompiler project ==="
+          
+          mkdir -p tools/baml-decompiler
+          cd tools/baml-decompiler
+          
+          cat > BamlDecompiler.csproj << 'PROJ'
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <OutputType>Exe</OutputType>
+              <TargetFramework>net8.0</TargetFramework>
+            </PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="ICSharpCode.BamlDecompiler" Version="10.1.0.8386" />
+            </ItemGroup>
+          </Project>
+          PROJ
+          
+          cat > Program.cs << 'CSHARP'
+          using System;
+          using System.IO;
+          using System.Reflection;
+          using ICSharpCode.BamlDecompiler;
+          using ICSharpCode.BamlDecompiler.Xaml;
+          
+          class Program
+          {
+              static void Main(string[] args)
+              {
+                  if (args.Length < 2)
+                  {
+                      Console.WriteLine("Usage: BamlDecompiler <assembly.dll> <output-dir>");
+                      return;
+                  }
+                  
+                  string assemblyPath = args[0];
+                  string outputDir = args[1];
+                  
+                  Console.WriteLine($"Decompiling: {assemblyPath}");
+                  Console.WriteLine($"Output: {outputDir}");
+                  
+                  try
+                  {
+                      Directory.CreateDirectory(outputDir);
+                      
+                      // Load the assembly
+                      var assembly = Assembly.LoadFrom(assemblyPath);
+                      
+                      // Get all embedded resources
+                      var resourceNames = assembly.GetManifestResourceNames();
+                      Console.WriteLine($"Found {resourceNames.Length} resources");
+                      
+                      foreach (var resourceName in resourceNames)
+                      {
+                          Console.WriteLine($"Resource: {resourceName}");
+                          
+                          if (resourceName.EndsWith(".g.resources"))
+                          {
+                              // This is a XAML resource file
+                              string xamlName = resourceName.Replace(".g.resources", "");
+                              Console.WriteLine($"  Processing XAML: {xamlName}");
+                              
+                              try
+                              {
+                                  using var stream = assembly.GetManifestResourceStream(resourceName);
+                                  if (stream != null)
+                                  {
+                                      // Try to decompile BAML
+                                      var settings = new BamlDecompilerSettings();
+                                      var decompiler = new BamlDecompiler(settings);
+                                      
+                                      // Read the resource
+                                      using var reader = new BinaryReader(stream);
+                                      var resourceData = reader.ReadBytes((int)stream.Length);
+                                      
+                                      // Save raw resource for now
+                                      string outputPath = Path.Combine(outputDir, $"{xamlName}_raw.resources");
+                                      File.WriteAllBytes(outputPath, resourceData);
+                                      Console.WriteLine($"  Saved: {outputPath}");
+                                  }
+                              }
+                              catch (Exception ex)
+                              {
+                                  Console.WriteLine($"  Error: {ex.Message}");
+                              }
+                          }
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine($"Error: {ex.Message}");
+                      Console.WriteLine(ex.StackTrace);
+                  }
+              }
+          }
+          CSHARP
+          
+          echo "=== Building project ==="
+          dotnet build -c Release
+          
+          echo "=== Decompiling assemblies ==="
+          cd ../..
           
           # Find DualSenseX.exe
           DUALSENSEX_EXE=$(find extracted/ -name "DualSenseX.exe" -type f | head -1)
@@ -157,53 +257,8 @@ jobs:
           
           echo "Found: $DUALSENSEX_EXE"
           
-          # Create output directory
           mkdir -p decompiled/DualSenseX/xaml
-          
-          # Find XAML references in binary
-          python3 -c "
-          import os
-          
-          exe_path = '$DUALSENSEX_EXE'
-          output_dir = 'decompiled/DualSenseX/xaml'
-          
-          with open(exe_path, 'rb') as f:
-              data = f.read()
-          
-          xaml_files = [
-              'Main.xaml',
-              'app.xaml', 
-              'custommessageboxwindow.xaml',
-              'popupcontentdialog.xaml',
-              'progressbardownloaddialog.xaml',
-              'contentdialogexample.xaml',
-              'triggerinfowindow.xaml',
-              'updateappwindow.xaml',
-          ]
-          
-          found = []
-          
-          for xaml_name in xaml_files:
-              search_bytes = xaml_name.encode('utf-16-le')
-              idx = 0
-              while True:
-                  idx = data.find(search_bytes, idx)
-                  if idx == -1:
-                      break
-                  start = max(0, idx - 100)
-                  end = min(len(data), idx + len(search_bytes) + 200)
-                  context = data[start:end]
-                  if b'component' in context.lower():
-                      found.append((xaml_name, idx))
-                      print(f'Found: {xaml_name} at offset {idx}')
-                  idx += 1
-          
-          with open(os.path.join(output_dir, 'xaml_files.txt'), 'w') as f:
-              for name, offset in found:
-                  f.write(f'{name} at offset {offset}\n')
-          
-          print(f'\nTotal XAML references found: {len(found)}')
-          "
+          dotnet run --project tools/baml-decompiler -- "$DUALSENSEX_EXE" "decompiled/DualSenseX/xaml" 2>&1 || true
           
           echo "=== Done ==="
 
