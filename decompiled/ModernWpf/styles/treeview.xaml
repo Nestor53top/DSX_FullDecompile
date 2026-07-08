@@ -1,0 +1,176 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:ModernWpf.Controls" xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives">
+    <Double x:Key="TreeViewItemMinHeight">32</Double>
+    <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DefaultTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+        <Style.Triggers>
+            <Trigger Property="IsVirtualizing" Value="true">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <Setter Property="Background" Value="{DynamicResource TreeViewItemBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ListViewItemForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TreeViewItemBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TreeViewItemBorderThemeThickness}" />
+        <Setter Property="TabNavigation" Value="Local" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="{DynamicResource ListViewItemMinWidth}" />
+        <Setter Property="MinHeight" Value="{DynamicResource TreeViewItemMinHeight}" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource {x:Static FocusVisualStyle}}" />
+        <Setter Property="UseSystemFocusVisuals" Value="{DynamicResource UseSystemFocusVisuals}" />
+        <Setter Property="IsEnabled" Value="True" />
+        <Setter Property="GlyphBrush" Value="{DynamicResource TreeViewItemForeground}" />
+        <Setter Property="CollapsedPath" Value="F0 M 5.029297,19.091797 L 14.111327999999999,10 5.029297,0.908203 5.908202999999999,0.029297 15.888672,10 5.908202999999999,19.970703 Z" />
+        <Setter Property="ExpandedPath" Value="F0 M 18.935547,4.560547 L 19.814453,5.439452999999999 10,15.253905999999999 0.185547,5.439452999999999 1.0644529999999999,4.560547 10,13.496094 Z" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter TargetName="CollapsedGlyph" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ExpandedGlyph" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="ExpandCollapseChevron" Property="Visibility" Value="Hidden" />
+                            <Setter Property="GlyphOpacity" Value="0" />
+                        </Trigger>
+                        <Trigger SourceName="ContentPresenterGrid" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundPointerOver}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundPointerOver}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushPointerOver}" Property="BorderBrush" />
+                        </Trigger>
+                        <Trigger SourceName="ContentPresenterGrid" Property="IsPressed" Value="True">
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundPressed}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundPressed}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushPressed}" Property="BorderBrush" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundSelected}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundSelected}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushSelected}" Property="BorderBrush" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundDisabled}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundDisabled}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushDisabled}" Property="BorderBrush" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition SourceName="ContentPresenterGrid" Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundSelectedPointerOver}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundSelectedPointerOver}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushSelectedPointerOver}" Property="BorderBrush" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition SourceName="ContentPresenterGrid" Property="IsPressed" Value="True" />
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundSelectedPressed}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundSelectedPressed}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushSelectedPressed}" Property="BorderBrush" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="IsEnabled" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBackgroundSelectedDisabled}" Property="Background" />
+                            <Setter TargetName="PART_Header" Value="{DynamicResource TreeViewItemForegroundSelectedDisabled}" Property="Foreground" />
+                            <Setter TargetName="ContentPresenterGrid" Value="{DynamicResource TreeViewItemBorderBrushSelectedDisabled}" Property="BorderBrush" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Border Name="ContentPresenterGrid" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" MinHeight="{TemplateBinding MinHeight}" Padding="{TemplateBinding Indentation}" SnapsToDevicePixels="true" IsEnabled="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <ToggleButton Name="ExpandCollapseChevron" Column="0" Padding="12,0,12,0" Width="Auto" Opacity="{TemplateBinding GlyphOpacity}" Background="Transparent" Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding IsExpanded , RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Grid>
+                                        <local:FontIconFallback Name="CollapsedGlyph" Foreground="{TemplateBinding GlyphBrush}" Width="12" Height="12" Visibility="Collapsed" FontSize="{TemplateBinding GlyphSize}" Data="{TemplateBinding CollapsedPath}" FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" IsHitTestVisible="False" />
+                                        <local:FontIconFallback Name="ExpandedGlyph" Foreground="{TemplateBinding GlyphBrush}" Width="12" Height="12" Visibility="Collapsed" FontSize="{TemplateBinding GlyphSize}" Data="{TemplateBinding ExpandedPath}" FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" IsHitTestVisible="False" />
+                                    </Grid>
+                                </ToggleButton>
+                                <ContentPresenter Name="PART_Header" Column="1" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                        </Border>
+                        <ItemsPresenter Name="ItemsHost" Row="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="{x:Type TreeViewItem}" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ExpandCollapseToggleStyle}" />
+    <Style x:Key="DefaultTreeViewStyle" TargetType="{x:Type TreeView}">
+        <Style.Triggers>
+            <Trigger Property="IsVirtualizing" Value="true">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="PanningMode" Value="Both" />
+        <Setter Property="IsFlicksEnabled" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource {x:Static FocusVisualStyle}}" />
+        <Setter Property="UseSystemFocusVisuals" Value="{DynamicResource UseSystemFocusVisuals}" />
+        <Setter Property="AutoHideScrollBars" Value="{DynamicResource AutoHideScrollBars}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsVirtualizing" Value="true">
+                            <Setter TargetName="_tv_scrollviewer_" Property="CanContentScroll" Value="true" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Border Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                        <ScrollViewer Name="_tv_scrollviewer_" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" CanContentScroll="false" Focusable="false" HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}" AutoHideScrollBars="{TemplateBinding AutoHideScrollBars}">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="{x:Type TreeView}" TargetType="{x:Type TreeView}" BasedOn="{StaticResource ExpandCollapseToggleStyle}" />
+</ResourceDictionary>
+

@@ -1,0 +1,34 @@
+<CustomMessageBoxWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ui="http://schemas.modernwpf.com/2019" Name="customMBWindow" UseModernWindowStyle="true" WindowStartupLocation="CenterScreen" AllowsTransparency="true" Background="Transparent" ShowInTaskbar="false" Topmost="true" ResizeMode="NoResize" SizeToContent="WidthAndHeight" TextFormattingMode="Display" TextRenderingMode="ClearType" UseLayoutRounding="true" Title="" MinHeight="155" MinWidth="154" Icon="/DualSenseX;component/Assets/Main.ico" WindowStyle="None">
+    <Border Name="borderBackground" Background="#CCFFFFFF">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Row="0" MinHeight="69">
+                <DockPanel>
+                    <Image Name="Image_MessageBox" Width="32" Height="32" HorizontalAlignment="Left" Dock="Left" Margin="30,0,0,0" Visibility="Collapsed" />
+                    <TextBlock Name="TextBlock_Message" TextWrapping="Wrap" Width="Auto" VerticalAlignment="Center" Margin="12,20,41,15" />
+                </DockPanel>
+            </Grid>
+            <Grid Row="1" MinHeight="69">
+                <Separator VerticalAlignment="Top" />
+                <DockPanel HorizontalAlignment="Center">
+                    <Button Name="Button_Cancel" MinWidth="88" Margin="5,0" HorizontalAlignment="Right" Visibility="Collapsed" IsCancel="true" Dock="Right">
+                        <Label Name="Label_Cancel" Padding="0" Margin="10,0">_Cancel</Label>
+                    </Button>
+                    <Button Name="Button_No" MinWidth="88" Margin="5,0" HorizontalAlignment="Right" Visibility="Collapsed" Dock="Right">
+                        <Label Name="Label_No" Padding="0" Margin="10,0">_No</Label>
+                    </Button>
+                    <Button Name="Button_Yes" MinWidth="88" Margin="35,0,5,0" HorizontalAlignment="Right" Dock="Right" Visibility="Collapsed">
+                        <Label Name="Label_Yes" Padding="0" Margin="10,0">_Yes</Label>
+                    </Button>
+                    <Button Name="Button_OK" MinWidth="88" Margin="35,0,5,0" HorizontalAlignment="Right">
+                        <Label Name="Label_Ok">_OK</Label>
+                    </Button>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</CustomMessageBoxWindow>
+

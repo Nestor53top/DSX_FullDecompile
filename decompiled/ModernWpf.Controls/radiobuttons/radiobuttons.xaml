@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ModernWpf.Controls" xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives">
+    <Style x:Key="{x:Type local:RadioButtons}" TargetType="{x:Type local:RadioButtons}">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="TabNavigation" Value="Once" />
+        <Setter Property="DirectionalNavigation" Value="Contained" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:RadioButtons}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="HeaderContentPresenter" Value="{DynamicResource RadioButtonsHeaderForegroundDisabled}" Property="Foreground" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <StackPanel SnapsToDevicePixels="True">
+                        <StackPanel.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </StackPanel.VisualStateGroups>
+                        <ContentPresenter Name="HeaderContentPresenter" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" Foreground="{DynamicResource RadioButtonsHeaderForeground}" Margin="{DynamicResource RadioButtonsTopHeaderMargin}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <local:ItemsRepeater Name="InnerRepeater" Layout="{primitives:ColumnMajorUniformToLargestGridLayout ColumnSpacing={DynamicResource RadioButtonsColumnSpacing}, RowSpacing={DynamicResource RadioButtonsRowSpacing}}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+

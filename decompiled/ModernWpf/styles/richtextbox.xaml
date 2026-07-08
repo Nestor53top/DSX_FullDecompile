@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ModernWpf.Controls" xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives">
+    <Thickness x:Key="RichEditBoxTopHeaderMargin">0,0,0,4</Thickness>
+    <Style x:Key="DefaultRichTextBoxStyle" TargetType="{x:Type RichTextBox}">
+        <Style.Resources>
+            <Style TargetType="{x:Type FlowDocument}">
+                <Setter x:Key="{x:Type FlowDocument}" Property="OverridesDefaultStyle" Value="true" />
+            </Style>
+            <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="{x:Type Hyperlink}" />
+        </Style.Resources>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        <Setter Property="FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="IsDeferredScrollingEnabled" Value="False" />
+        <Setter Property="PanningMode" Value="VerticalFirst" />
+        <Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="TabNavigation" Value="None" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="FocusVisualStyle" Value="{Null}" />
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="IsFlicksEnabled" Value="False" />
+        <Setter Property="ContextMenu" Value="{DynamicResource TextControlContextMenu}" />
+        <Setter Property="UsingTextContextMenu" Value="True" />
+        <Setter Property="IsEnabled" Value="True" />
+        <Setter Property="ErrorTemplate" Value="{DynamicResource TextControlValidationErrorTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RichTextBox}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="HeaderContentPresenter" Value="{DynamicResource TextControlHeaderForegroundDisabled}" Property="Foreground" />
+                            <Setter Value="{DynamicResource TextControlBackgroundDisabled}" Property="Background" />
+                            <Setter TargetName="BorderElement" Value="{DynamicResource TextControlBorderBrushDisabled}" Property="BorderBrush" />
+                            <Setter Value="{DynamicResource TextControlForegroundDisabled}" Property="Foreground" />
+                            <Setter TargetName="PlaceholderTextContentPresenter" Value="{DynamicResource TextControlPlaceholderForegroundDisabled}" Property="Foreground" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="BorderElement" Value="{DynamicResource TextControlBorderBrushPointerOver}" Property="BorderBrush" />
+                            <Setter Value="{DynamicResource TextControlBackgroundPointerOver}" Property="Background" />
+                            <Setter TargetName="PlaceholderTextContentPresenter" Value="{DynamicResource TextControlPlaceholderForegroundPointerOver}" Property="Foreground" />
+                            <Setter Value="{DynamicResource TextControlForegroundPointerOver}" Property="Foreground" />
+                        </Trigger>
+                        <Trigger Property="IsSelectionActive" Value="true">
+                            <Setter TargetName="PlaceholderTextContentPresenter" Value="{DynamicResource TextControlPlaceholderForegroundFocused}" Property="Foreground" />
+                            <Setter Value="{DynamicResource TextControlBackgroundFocused}" Property="Background" />
+                            <Setter TargetName="BorderElement" Value="{DynamicResource TextControlBorderBrushFocused}" Property="BorderBrush" />
+                            <Setter TargetName="BorderElement" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" Property="BorderThickness" />
+                            <Setter Value="{DynamicResource TextControlForegroundFocused}" Property="Foreground" />
+                        </Trigger>
+                        <Trigger Property="IsEmpty" Value="True">
+                            <Setter TargetName="PlaceholderTextContentPresenter" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <local:ContentPresenterEx Name="HeaderContentPresenter" Row="0" Foreground="{DynamicResource TextControlHeaderForeground}" Margin="{DynamicResource RichEditBoxTopHeaderMargin}" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" FontWeight="Normal" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="{TemplateBinding HeaderVisibility}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <Border Name="BorderElement" Row="1" RowSpan="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" MinWidth="{DynamicResource TextControlThemeMinWidth}" MinHeight="{DynamicResource TextControlThemeMinHeight}" IsTemplateValidationAdornerSite="True" />
+                        <ScrollViewer Name="PART_ContentHost" Row="1" Style="{DynamicResource TextControlContentHostStyle}" ContentPresenterMargin="-5,-1" HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}" VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}" IsDeferredScrollingEnabled="{TemplateBinding IsDeferredScrollingEnabled}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" IsTabStop="False" Focusable="False" />
+                        <TextBlock Name="PlaceholderTextContentPresenter" Row="1" Foreground="{DynamicResource TextControlPlaceholderForeground}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Text="{TemplateBinding PlaceholderText}" IsHitTestVisible="False" Visibility="Collapsed" />
+                        <ContentPresenter Name="DescriptionPresenter" Row="2" Content="{TemplateBinding Description}" Visibility="{TemplateBinding DescriptionVisibility}" Foreground="{DynamicResource SystemControlDescriptionTextForegroundBrush}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="{x:Type RichTextBox}" TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource {x:Type Hyperlink}}" />
+</ResourceDictionary>
+

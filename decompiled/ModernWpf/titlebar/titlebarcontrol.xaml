@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ModernWpf.Controls" xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Double x:Key="{Static local:TitleBar.HeightKey}">32</Double>
+    <StreamGeometry x:Key="ChromeClose">M 11.416016 10 L 20 18.583984 L 18.583984 20 L 10 11.416016 L 1.416016 20 L 0 18.583984 L 8.583984 10 L 0 1.416016 L 1.416016 0 L 10 8.583984 L 18.583984 0 L 20 1.416016 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeMinimize">M 20 8 L 20 10 L 0 10 L 0 8 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeMaximize">M 20 0 L 20 20 L 0 20 L 0 0 Z M 18 2 L 2 2 L 2 18 L 18 18 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeRestore">M 20 16 L 16 16 L 16 20 L 0 20 L 0 4 L 4 4 L 4 0 L 20 0 Z M 14 6 L 2 6 L 2 18 L 14 18 Z M 18 2 L 6 2 L 6 4 L 16 4 L 16 14 L 18 14 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeCloseContrast">M 20 2.832031 L 12.832031 10 L 20 17.167969 L 17.167969 20 L 10 12.832031 L 2.832031 20 L 0 17.167969 L 7.167969 10 L 0 2.832031 L 2.832031 0 L 10 7.167969 L 17.167969 0 L 20 2.832031 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeMinimizeContrast">M 0 8 L 20 8 L 20 12 L 0 12 L 0 8 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeMaximizeContrast">M 0 0 L 20 0 L 20 20 L 0 20 Z M 16 16 L 16 4 L 4 4 L 4 16 Z</StreamGeometry>
+    <StreamGeometry x:Key="ChromeRestoreContrast">M 20 0 L 20 14 L 14 14 L 14 20 L 0 20 L 0 6 L 6 6 L 6 0 Z M 10 16 L 10 10 L 4 10 L 4 16 Z M 16 10 L 16 4 L 10 4 L 10 6 L 14 6 L 14 10 Z</StreamGeometry>
+    <DataTemplate x:Key="IconTemplate">
+        <local:FontIconFallback Data="{Binding}" />
+    </DataTemplate>
+    <Style x:Key="{x:Type primitives:TitleBarControl}" TargetType="{x:Type primitives:TitleBarControl}">
+        <Setter Property="Height" Value="{DynamicResource {x:Static HeightKey}}" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type primitives:TitleBarControl}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsActive" Value="False">
+                            <Setter TargetName="LayoutRoot" Value="{Binding InactiveBackground , RelativeSource={RelativeSource TemplatedParent}}" Property="Background" />
+                            <Setter TargetName="HighContrastBackground" Value="{DynamicResource {x:Static InactiveCaptionBrush}}" Property="Fill" />
+                            <Setter TargetName="Title" Value="{Binding InactiveForeground , RelativeSource={RelativeSource TemplatedParent}}" Property="Foreground" />
+                        </Trigger>
+                        <Trigger Property="ExtendViewIntoTitleBar" Value="True">
+                            <Setter TargetName="LayoutRoot" Value="{Null}" Property="Background" />
+                            <Setter TargetName="IconTitlePanel" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsBackButtonVisible" Value="True">
+                            <Setter TargetName="PART_BackButton" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsIconVisible" Value="True">
+                            <Setter TargetName="Icon" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Title" Property="Margin" Value="5,0,12,0" />
+                        </Trigger>
+                        <DataTrigger Value="ToolWindow" Binding="{Binding WindowStyle , RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <Setter TargetName="MinimizeButton" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MaximizeRestoreButton" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Value="NoResize" Binding="{Binding ResizeMode , RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <Setter TargetName="MinimizeButton" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MaximizeRestoreButton" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Value="CanMinimize" Binding="{Binding ResizeMode , RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <Setter TargetName="MaximizeRestoreButton" Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                        <DataTrigger Value="Maximized" Binding="{Binding WindowState , RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <Setter TargetName="MaximizeRestoreButton" Value="{StaticResource ChromeRestore}" Property="Content" />
+                            <Setter TargetName="MaximizeRestoreButton" Value="{Static RestoreWindowCommand}" Property="Command" />
+                            <Setter TargetName="MaximizeRestoreButton" Property="Name" Value="Restore" />
+                        </DataTrigger>
+                        <DataTrigger Value="true" Binding="{Binding Path=(SystemParameters.HighContrast)}">
+                            <Setter TargetName="PART_BackButton" Value="{DynamicResource {x:Static ControlBrush}}" Property="Background" />
+                            <Setter TargetName="Title" Value="{DynamicResource {x:Static ActiveCaptionTextBrush}}" Property="Foreground" />
+                            <Setter TargetName="MinimizeButton" Value="{StaticResource ChromeMinimizeContrast}" Property="Content" />
+                            <Setter TargetName="MaximizeRestoreButton" Value="{StaticResource ChromeMaximizeContrast}" Property="Content" />
+                            <Setter TargetName="CloseButton" Value="{StaticResource ChromeCloseContrast}" Property="Content" />
+                            <Setter TargetName="CloseButton" Value="{DynamicResource SystemControlHighlightListLowBrush}" Property="HoverBackground" />
+                            <Setter TargetName="CloseButton" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" Property="HoverForeground" />
+                            <Setter TargetName="CloseButton" Value="{DynamicResource SystemControlHighlightListMediumBrush}" Property="PressedBackground" />
+                            <Setter TargetName="CloseButton" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" Property="PressedForeground" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="True" />
+                                <Condition Binding="{Binding ExtendViewIntoTitleBar , RelativeSource={RelativeSource Self}}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="HighContrastBackground" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="True" />
+                                <Condition Binding="{Binding IsActive , RelativeSource={RelativeSource Self}}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="Title" Value="{DynamicResource {x:Static InactiveCaptionTextBrush}}" Property="Foreground" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="True" />
+                                <Condition Binding="{Binding WindowState , RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="Maximized" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="MaximizeRestoreButton" Value="{StaticResource ChromeRestoreContrast}" Property="Content" />
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                    <Grid Name="LayoutRoot" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Name="HighContrastBackground" ColumnSpan="3" Fill="{DynamicResource {x:Static ActiveCaptionBrush}}" Visibility="Collapsed" />
+                        <StackPanel Name="PART_LeftSystemOverlay" Orientation="Horizontal">
+                            <primitives:TitleBarButton Name="PART_BackButton" Style="{TemplateBinding BackButtonStyle}" Height="{TemplateBinding Height}" IsEnabled="{TemplateBinding IsBackEnabled}" Command="{TemplateBinding BackButtonCommand}" CommandParameter="{TemplateBinding BackButtonCommandParameter}" CommandTarget="{TemplateBinding BackButtonCommandTarget}" IsActive="{TemplateBinding IsActive}" Visibility="Collapsed" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Name="Back" />
+                        </StackPanel>
+                        <StackPanel Name="IconTitlePanel" Column="1" Orientation="Horizontal">
+                            <Image Name="Icon" Source="{TemplateBinding ActualIcon}" Width="{DynamicResource {x:Static SmallIconWidth}}" Height="{DynamicResource {x:Static SmallIconHeight}}" Margin="10,0,0,0" VerticalAlignment="Center" Visibility="Collapsed" />
+                            <TextBlock Name="Title" Margin="12,0,12,0" VerticalAlignment="Center" FontSize="12" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Title}" TextTrimming="CharacterEllipsis" Background="{Null}" RenderTransform="{TranslateTransform Y=-1}" />
+                        </StackPanel>
+                        <StackPanel Name="PART_RightSystemOverlay" Column="2" Orientation="Horizontal">
+                            <primitives:TitleBarButton Name="MinimizeButton" Command="{Static MinimizeWindowCommand}" Content="{StaticResource ChromeMinimize}" ContentTemplate="{StaticResource IconTemplate}" IsActive="{TemplateBinding IsActive}" Style="{TemplateBinding ButtonStyle}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Name="Minimize" />
+                            <primitives:TitleBarButton Name="MaximizeRestoreButton" Command="{Static MaximizeWindowCommand}" Content="{StaticResource ChromeMaximize}" ContentTemplate="{StaticResource IconTemplate}" IsActive="{TemplateBinding IsActive}" Style="{TemplateBinding ButtonStyle}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Name="Maximize" />
+                            <primitives:TitleBarButton Name="CloseButton" Command="{Static CloseWindowCommand}" Content="{StaticResource ChromeClose}" ContentTemplate="{StaticResource IconTemplate}" IsActive="{TemplateBinding IsActive}" Style="{TemplateBinding ButtonStyle}" HoverBackground="#E81123" HoverForeground="{DynamicResource SystemControlBackgroundChromeWhiteBrush}" PressedBackground="#F1707A" PressedForeground="{DynamicResource SystemControlBackgroundChromeWhiteBrush}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Name="Close" />
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+

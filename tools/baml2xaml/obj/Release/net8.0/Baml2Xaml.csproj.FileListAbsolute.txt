@@ -1,0 +1,15 @@
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/bin/Release/net8.0/Baml2Xaml
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.deps.json
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.runtimeconfig.json
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.dll
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/bin/Release/net8.0/Baml2Xaml.pdb
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.AssemblyInfoInputs.cache
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.AssemblyInfo.cs
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.csproj.CoreCompileInputs.cache
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.sourcelink.json
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.dll
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/refint/Baml2Xaml.dll
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.pdb
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/Baml2Xaml.genruntimeconfig.cache
+/home/runner/work/DSX_FullDecompile/DSX_FullDecompile/tools/baml2xaml/obj/Release/net8.0/ref/Baml2Xaml.dll

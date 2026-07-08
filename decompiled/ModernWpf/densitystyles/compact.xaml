@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Double x:Key="ControlContentThemeFontSize">14</Double>
+    <Double x:Key="ContentControlFontSize">14</Double>
+    <Double x:Key="TextControlThemeMinHeight">24</Double>
+    <Thickness x:Key="TextControlThemePadding">2,2,6,1</Thickness>
+    <Double x:Key="ListViewItemMinHeight">32</Double>
+    <Double x:Key="TreeViewItemMinHeight">24</Double>
+    <Thickness x:Key="TimePickerHostPadding">0,1,0,2</Thickness>
+    <Thickness x:Key="DatePickerHostPadding">0,1,0,2</Thickness>
+    <Thickness x:Key="DatePickerHostMonthPadding">9,0,0,1</Thickness>
+    <Thickness x:Key="ComboBoxEditableTextPadding">10,0,30,0</Thickness>
+    <Double x:Key="ComboBoxMinHeight">24</Double>
+    <Thickness x:Key="ComboBoxPadding">12,1,0,3</Thickness>
+    <Double x:Key="NavigationViewItemOnLeftMinHeight">32</Double>
+    <Double x:Key="GridViewColumnHeaderMinHeight">25</Double>
+    <Double x:Key="GridViewItemContainerMinHeight">24</Double>
+    <Double x:Key="DataGridRowMinHeight">24</Double>
+    <Double x:Key="TimePickerFlyoutPresenterItemHeight">32</Double>
+    <Double x:Key="TimePickerFlyoutPresenterHighlightHeight">32</Double>
+    <Double x:Key="TimePickerFlyoutPresenterAcceptDismissHostGridHeight">33</Double>
+    <Double x:Key="TimePickerPopupVerticalOffset">16</Double>
+    <Thickness x:Key="TimePickerFlyoutPresenterItemPadding">0,0,0,1</Thickness>
+    <Double x:Key="DatePickerFlyoutPresenterItemHeight">32</Double>
+    <Double x:Key="DatePickerFlyoutPresenterHighlightHeight">32</Double>
+    <Double x:Key="DatePickerFlyoutPresenterAcceptDismissHostGridHeight">33</Double>
+    <Thickness x:Key="DatePickerFlyoutPresenterItemPadding">0,0,0,1</Thickness>
+    <Thickness x:Key="DatePickerFlyoutPresenterMonthPadding">9,0,0,1</Thickness>
+</ResourceDictionary>
+

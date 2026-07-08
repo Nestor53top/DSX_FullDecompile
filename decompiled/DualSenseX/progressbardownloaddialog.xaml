@@ -1,0 +1,12 @@
+<ProgressBarDownloadDialog xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ui="http://schemas.modernwpf.com/2019" Title="Fetching Update..." PrimaryButtonText="" SecondaryButtonText="" CloseButtonText="Cancel" DefaultButton="Close">
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <ProgressBar Name="ContinuousProgressBar" IsIndeterminate="true" Height="5" />
+        <Label Name="PleaseWaitLabel" Content="Please Wait" VerticalContentAlignment="Center" FontSize="14" Height="30" />
+        <TextBlock Name="BodyText" Text="" TextWrapping="Wrap" FontSize="16" Width="400" />
+        <Label Name="ProgressValueLabel" Content="69%" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" />
+        <TextBlock Text="" TextWrapping="Wrap" FontSize="16" />
+        <ProgressBar Name="ProgressBar2" />
+        <TextBlock Text="" TextWrapping="Wrap" FontSize="16" />
+    </StackPanel>
+</ProgressBarDownloadDialog>
+
