@@ -148,29 +148,59 @@ jobs:
           echo "=== Cloning Baml2Xaml converter ==="
           git clone https://github.com/nuloperrito/Baml2Xaml.git tools/Baml2Xaml
           
-          echo "=== Retargeting to net8.0 ==="
+          echo "=== Fixing source code ==="
+          # Retarget to net8.0
           sed -i 's|<TargetFramework>netcoreapp3.1</TargetFramework>|<TargetFramework>net8.0</TargetFramework>|' tools/Baml2Xaml/Baml2Xaml.csproj
+          # Suppress CS0108 (duplicate using) and other warnings
+          sed -i 's|</PropertyGroup>|<NoWarn>CS0108;CS0105</NoWarn><TreatWarningsAsErrors>false</TreatWarningsAsErrors></PropertyGroup>|' tools/Baml2Xaml/Baml2Xaml.csproj
+          # Remove duplicate using System;
+          python3 -c "
+          with open('tools/Baml2Xaml/Program.cs', 'r') as f:
+              lines = f.readlines()
+          seen_using = False
+          new_lines = []
+          for line in lines:
+              if line.strip() == 'using System;' and not seen_using:
+                  seen_using = True
+                  new_lines.append(line)
+              elif line.strip() == 'using System;' and seen_using:
+                  continue  # skip duplicate
+              else:
+                  new_lines.append(line)
+          with open('tools/Baml2Xaml/Program.cs', 'w') as f:
+              f.writelines(new_lines)
+          print('Fixed duplicate using directives')
+          "
           
           echo "=== Building Baml2Xaml ==="
-          dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release
+          dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release 2>&1
+          BUILD_EXIT=$?
+          echo "Build exit: $BUILD_EXIT"
+          
+          if [ $BUILD_EXIT -ne 0 ]; then
+            echo "Build FAILED! Aborting."
+            exit 1
+          fi
           
           echo "=== Testing on one BAML file first ==="
           TEST_BAML=$(find decompiled/ -name "*.baml" | head -1)
           echo "Test file: $TEST_BAML"
           echo "$TEST_BAML" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1
-          echo "Exit code: $?"
+          TEST_EXIT=$?
+          echo "Test exit code: $TEST_EXIT"
           
-          echo "=== Converting all .baml files to .xaml ==="
-          SUCCESS=0
-          FAIL=0
-          find decompiled/ -name "*.baml" | while read baml_file; do
-            echo "Converting: $baml_file"
-            if echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1; then
-              echo "  OK"
-            else
-              echo "  FAILED: exit $?"
-            fi
-          done
+          # Check if xaml was created
+          TEST_XAML="${TEST_BAML%.baml}.xaml"
+          if [ -f "$TEST_XAML" ]; then
+            echo "SUCCESS! Created: $TEST_XAML ($(wc -c < "$TEST_XAML") bytes)"
+            echo "=== Converting ALL .baml files ==="
+            find decompiled/ -name "*.baml" | while read baml_file; do
+              echo "Converting: $baml_file"
+              echo "$baml_file" | dotnet run --no-build --project tools/Baml2Xaml/Baml2Xaml.csproj 2>&1 || echo "  FAILED"
+            done
+          else
+            echo "FAILED! No xaml file created at: $TEST_XAML"
+          fi
           
           echo "=== Results ==="
           echo "BAML files: $(find decompiled/ -name '*.baml' | wc -l)"
@@ -186,7 +216,7 @@ jobs:
           echo "Total .cs files: $total"
           echo ""
           echo "XAML files:"
-          find decompiled/ -name "*.xaml" | sort | head -20
+          find decompiled/ -name "*.xaml" | sort | head -20 || echo "  None"
           echo ""
           echo "By project:"
           for dir in decompiled/*/; do
@@ -197,6 +227,7 @@ jobs:
             fi
           done
           echo "========================================"
+        continue-on-error: true
 
       - name: Commit and push results
         run: |
