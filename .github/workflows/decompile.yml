@@ -143,6 +143,111 @@ jobs:
           GitHub: https://github.com/ViGEm/HidHide
           EOF
 
+      - name: Extract XAML from BAML resources
+        run: |
+          echo "=== Extracting XAML from BAML resources ==="
+          
+          # Create a C# project to extract BAML
+          mkdir -p tools/baml-extractor
+          cd tools/baml-extractor
+          
+          cat > BamlExtractor.csproj << 'PROJ'
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <OutputType>Exe</OutputType>
+              <TargetFramework>net8.0</TargetFramework>
+            </PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="ICSharpCode.Decompiler" Version="8.2.0.7535" />
+            </ItemGroup>
+          </Project>
+          PROJ
+          
+          cat > Program.cs << 'CSHARP'
+          using System;
+          using System.IO;
+          using ICSharpCode.Decompiler;
+          using ICSharpCode.Decompiler.CSharp;
+          using ICSharpCode.Decompiler.TypeSystem;
+          
+          class Program
+          {
+              static void Main(string[] args)
+              {
+                  if (args.Length < 2)
+                  {
+                      Console.WriteLine("Usage: BamlExtractor <assembly.dll> <output-dir>");
+                      return;
+                  }
+                  
+                  string assemblyPath = args[0];
+                  string outputDir = args[1];
+                  
+                  try
+                  {
+                      var decompiler = new CSharpDecompiler(assemblyPath, new DecompilerSettings());
+                      
+                      // Get all XAML resources
+                      var resourceNames = decompiler.TypeSystem.MainModule.Resources
+                          .Where(r => r.Name.EndsWith(".g.resources"))
+                          .ToList();
+                      
+                      Console.WriteLine($"Found {resourceNames.Count} XAML resource files");
+                      
+                      foreach (var resource in resourceNames)
+                      {
+                          Console.WriteLine($"Processing: {resource.Name}");
+                          
+                          // Try to decompile the resource
+                          try
+                          {
+                              using var stream = resource.CreateStream();
+                              using var reader = new BinaryReader(stream);
+                              
+                              // Read resource header
+                              int version = reader.ReadInt32();
+                              int numHeaders = reader.ReadInt32();
+                              
+                              Console.WriteLine($"  Version: {version}, Headers: {numHeaders}");
+                              
+                              // For now, just save the raw resource
+                              string resourceName = resource.Name.Replace(".g.resources", "");
+                              string outputPath = Path.Combine(outputDir, $"{ resourceName}_resources.bin");
+                              
+                              stream.Position = 0;
+                              using var fileStream = File.Create(outputPath);
+                              stream.CopyTo(fileStream);
+                              
+                              Console.WriteLine($"  Saved to: {outputPath}");
+                          }
+                          catch (Exception ex)
+                          {
+                              Console.WriteLine($"  Error: {ex.Message}");
+                          }
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine($"Error: {ex.Message}");
+                  }
+              }
+          }
+          CSHARP
+          
+          # Build and run
+          dotnet build -c Release
+          
+          # Find all assemblies and extract XAML
+          cd ../..
+          find extracted/ -type f \( -name "*.dll" -o -name "*.exe" \) | while read assembly; do
+            name=$(basename "$assembly" | sed 's/\.[^.]*$//')
+            echo "Extracting XAML from: $name"
+            mkdir -p "decompiled/$name/xaml"
+            dotnet run --project tools/baml-extractor -- "$assembly" "decompiled/$name/xaml" 2>&1 || true
+          done
+          
+          echo "=== XAML extraction complete ==="
+
       - name: Count and summarize results
         run: |
           echo "========================================"
@@ -151,12 +256,16 @@ jobs:
           total=$(find decompiled/ -name "*.cs" | wc -l)
           echo "Total .cs files: $total"
           echo ""
+          echo "XAML files found:"
+          find decompiled/ -name "*.xaml" -o -name "*.baml" | head -20
+          echo ""
           echo "By project:"
           for dir in decompiled/*/; do
             name=$(basename "$dir")
             count=$(find "$dir" -name "*.cs" 2>/dev/null | wc -l)
-            if [ "$count" -gt 0 ]; then
-              echo "  $name: $count .cs files"
+            xaml_count=$(find "$dir" -name "*.xaml" -o -name "*.baml" 2>/dev/null | wc -l)
+            if [ "$count" -gt 0 ] || [ "$xaml_count" -gt 0 ]; then
+              echo "  $name: $count .cs files, $xaml_count XAML/BAML files"
             fi
           done
           echo "========================================"
@@ -170,6 +279,7 @@ jobs:
             echo "No changes to commit"
           else
             count=$(find decompiled/ -name "*.cs" 2>/dev/null | wc -l)
-            git commit -m "Auto-decompile: $(date -u +%Y-%m-%d) - $count .cs files"
+            xaml_count=$(find decompiled/ -name "*.xaml" -o -name "*.baml" 2>/dev/null | wc -l)
+            git commit -m "Auto-decompile: $(date -u +%Y-%m-%d) - $count .cs files, $xaml_count XAML/BAML files"
             git push
           fi
