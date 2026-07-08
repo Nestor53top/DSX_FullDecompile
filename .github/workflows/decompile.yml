@@ -143,84 +143,9 @@ jobs:
           GitHub: https://github.com/ViGEm/HidHide
           EOF
 
-      - name: Extract XAML from BAML resources
+      - name: Extract XAML references from binary
         run: |
-          echo "=== Extracting XAML file references from binary ==="
-          
-          # Create Python script to find XAML references
-          cat > extract_xaml_refs.py << 'PYTHON'
-          import struct
-          import os
-          import sys
-          
-          def find_xaml_refs(exe_path, output_dir):
-              """Find XAML file references in .NET assembly"""
-              with open(exe_path, 'rb') as f:
-                  data = f.read()
-              
-              # XAML file names to search for (UTF-16LE encoded)
-              xaml_files = [
-                  'Main.xaml',
-                  'app.xaml',
-                  'custommessageboxwindow.xaml',
-                  'popupcontentdialog.xaml',
-                  'progressbardownloaddialog.xaml',
-                  'contentdialogexample.xaml',
-                  'triggerinfowindow.xaml',
-                  'updateappwindow.xaml',
-              ]
-              
-              found_xaml = []
-              
-              for xaml_name in xaml_files:
-                  # Search for the name in both ASCII and UTF-16LE
-                  for encoding in ['ascii', 'utf-16-le']:
-                      if encoding == 'ascii':
-                          search_bytes = xaml_name.encode('ascii')
-                      else:
-                          search_bytes = xaml_name.encode('utf-16-le')
-                      
-                      idx = 0
-                      while True:
-                          idx = data.find(search_bytes, idx)
-                          if idx == -1:
-                              break
-                          
-                          # Get context around the match
-                          start = max(0, idx - 50)
-                          end = min(len(data), idx + len(search_bytes) + 100)
-                          context = data[start:end]
-                          
-                          # Check if this looks like a XAML reference
-                          if b'component/' in context or b'Component/' in context or xaml_name.encode() in context:
-                              found_xaml.append({
-                                  'name': xaml_name,
-                                  'offset': idx,
-                                  'context': context.decode('ascii', errors='replace')
-                              })
-                          
-                          idx += 1
-              
-              return found_xaml
-          
-          if __name__ == '__main__':
-              exe_path = sys.argv[1] if len(sys.argv) > 1 else 'DualSenseX.exe'
-              output_dir = sys.argv[2] if len(sys.argv) > 2 else '.'
-              
-              if not os.path.exists(exe_path):
-                  print(f"File not found: {exe_path}")
-                  sys.exit(1)
-              
-              os.makedirs(output_dir, exist_ok=True)
-              
-              refs = find_xaml_refs(exe_path, output_dir)
-              
-              print(f"\nFound {len(refs)} XAML references:")
-              for ref in refs:
-                  print(f"  {ref['name']} at offset {ref['offset']}")
-                  print(f"    Context: {ref['context'][:100]}")
-          
-          PYTHON
+          echo "=== Extracting XAML file references from DualSenseX.exe ==="
           
           # Find DualSenseX.exe
           DUALSENSEX_EXE=$(find extracted/ -name "DualSenseX.exe" -type f | head -1)
@@ -230,50 +155,57 @@ jobs:
             exit 1
           fi
           
-          echo "Found DualSenseX.exe: $DUALSENSEX_EXE"
+          echo "Found: $DUALSENSEX_EXE"
           
-          # Extract XAML references
+          # Create output directory
           mkdir -p decompiled/DualSenseX/xaml
-          python3 extract_xaml_refs.py "$DUALSENSEX_EXE" "decompiled/DualSenseX/xaml"
           
-          # Also try to find BAML data
-          echo ""
-          echo "=== Searching for BAML data patterns ==="
+          # Find XAML references in binary
+          python3 -c "
+          import os
           
-          # Look for common BAML signatures
-          python3 << 'EOF'
-          import struct
+          exe_path = '$DUALSENSEX_EXE'
+          output_dir = 'decompiled/DualSenseX/xaml'
           
-          exe_path = "$DUALSENSEX_EXE"
           with open(exe_path, 'rb') as f:
               data = f.read()
           
-          # BAML header signature (version 1, reader type 1)
-          baml_header = b'\x01\x00\x00\x00\x01\x00\x00\x00'
+          xaml_files = [
+              'Main.xaml',
+              'app.xaml', 
+              'custommessageboxwindow.xaml',
+              'popupcontentdialog.xaml',
+              'progressbardownloaddialog.xaml',
+              'contentdialogexample.xaml',
+              'triggerinfowindow.xaml',
+              'updateappwindow.xaml',
+          ]
           
-          idx = 0
-          baml_count = 0
-          while True:
-              idx = data.find(baml_header, idx)
-              if idx == -1:
-                  break
-              
-              # Check if this looks like valid BAML
-              # Read a few more bytes to verify
-              if idx + 16 < len(data):
-                  next_bytes = data[idx+8:idx+16]
-                  # BAML records start after header
-                  print(f"Potential BAML at offset {idx} (0x{idx:x})")
-                  print(f"  Header: {data[idx:idx+8].hex()}")
-                  print(f"  Next: {next_bytes.hex()}")
-                  baml_count += 1
-              
-              idx += 1
+          found = []
           
-          print(f"\nFound {baml_count} potential BAML sections")
-          EOF
+          for xaml_name in xaml_files:
+              search_bytes = xaml_name.encode('utf-16-le')
+              idx = 0
+              while True:
+                  idx = data.find(search_bytes, idx)
+                  if idx == -1:
+                      break
+                  start = max(0, idx - 100)
+                  end = min(len(data), idx + len(search_bytes) + 200)
+                  context = data[start:end]
+                  if b'component' in context.lower():
+                      found.append((xaml_name, idx))
+                      print(f'Found: {xaml_name} at offset {idx}')
+                  idx += 1
           
-          echo "=== XAML extraction complete ==="
+          with open(os.path.join(output_dir, 'xaml_files.txt'), 'w') as f:
+              for name, offset in found:
+                  f.write(f'{name} at offset {offset}\n')
+          
+          print(f'\nTotal XAML references found: {len(found)}')
+          "
+          
+          echo "=== Done ==="
 
       - name: Count and summarize results
         run: |
@@ -283,16 +215,15 @@ jobs:
           total=$(find decompiled/ -name "*.cs" | wc -l)
           echo "Total .cs files: $total"
           echo ""
-          echo "XAML files found:"
-          find decompiled/ -name "*.xaml" -o -name "*.baml" | head -20
+          echo "XAML references:"
+          cat decompiled/DualSenseX/xaml/xaml_files.txt 2>/dev/null || echo "  None found"
           echo ""
           echo "By project:"
           for dir in decompiled/*/; do
             name=$(basename "$dir")
             count=$(find "$dir" -name "*.cs" 2>/dev/null | wc -l)
-            xaml_count=$(find "$dir" -name "*.xaml" -o -name "*.baml" 2>/dev/null | wc -l)
-            if [ "$count" -gt 0 ] || [ "$xaml_count" -gt 0 ]; then
-              echo "  $name: $count .cs files, $xaml_count XAML/BAML files"
+            if [ "$count" -gt 0 ]; then
+              echo "  $name: $count .cs files"
             fi
           done
           echo "========================================"
