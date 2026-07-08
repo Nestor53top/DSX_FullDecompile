@@ -143,123 +143,35 @@ jobs:
           GitHub: https://github.com/ViGEm/HidHide
           EOF
 
-      - name: Decompile XAML from BAML using ICSharpCode.BamlDecompiler
+      - name: Convert BAML to XAML using Baml2Xaml
         run: |
-          echo "=== Creating BAML decompiler project ==="
+          echo "=== Cloning Baml2Xaml converter ==="
+          git clone https://github.com/nuloperrito/Baml2Xaml.git tools/Baml2Xaml
           
-          mkdir -p tools/baml-decompiler
-          cd tools/baml-decompiler
+          echo "=== Retargeting to net8.0 ==="
+          sed -i 's|<TargetFramework>netcoreapp3.1</TargetFramework>|<TargetFramework>net8.0</TargetFramework>|' tools/Baml2Xaml/Baml2Xaml.csproj
           
-          cat > BamlDecompiler.csproj << 'PROJ'
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <OutputType>Exe</OutputType>
-              <TargetFramework>net8.0</TargetFramework>
-            </PropertyGroup>
-            <ItemGroup>
-              <PackageReference Include="ICSharpCode.BamlDecompiler" Version="10.1.0.8386" />
-            </ItemGroup>
-          </Project>
-          PROJ
+          echo "=== Building Baml2Xaml ==="
+          dotnet build tools/Baml2Xaml/Baml2Xaml.csproj -c Release
           
-          cat > Program.cs << 'CSHARP'
-          using System;
-          using System.IO;
-          using System.Reflection;
-          using ICSharpCode.BamlDecompiler;
-          using ICSharpCode.BamlDecompiler.Xaml;
+          echo "=== Converting all .baml files to .xaml ==="
+          BAML_COUNT=0
+          XAML_COUNT=0
+          FAILED_COUNT=0
+          find decompiled/ -name "*.baml" | while read baml_file; do
+            echo "Converting: $baml_file"
+            if dotnet run --project tools/Baml2Xaml/Baml2Xaml.csproj -- "$baml_file" 2>&1; then
+              XAML_COUNT=$((XAML_COUNT+1))
+            else
+              echo "  FAILED: $baml_file"
+              FAILED_COUNT=$((FAILED_COUNT+1))
+            fi
+            BAML_COUNT=$((BAML_COUNT+1))
+          done
           
-          class Program
-          {
-              static void Main(string[] args)
-              {
-                  if (args.Length < 2)
-                  {
-                      Console.WriteLine("Usage: BamlDecompiler <assembly.dll> <output-dir>");
-                      return;
-                  }
-                  
-                  string assemblyPath = args[0];
-                  string outputDir = args[1];
-                  
-                  Console.WriteLine($"Decompiling: {assemblyPath}");
-                  Console.WriteLine($"Output: {outputDir}");
-                  
-                  try
-                  {
-                      Directory.CreateDirectory(outputDir);
-                      
-                      // Load the assembly
-                      var assembly = Assembly.LoadFrom(assemblyPath);
-                      
-                      // Get all embedded resources
-                      var resourceNames = assembly.GetManifestResourceNames();
-                      Console.WriteLine($"Found {resourceNames.Length} resources");
-                      
-                      foreach (var resourceName in resourceNames)
-                      {
-                          Console.WriteLine($"Resource: {resourceName}");
-                          
-                          if (resourceName.EndsWith(".g.resources"))
-                          {
-                              // This is a XAML resource file
-                              string xamlName = resourceName.Replace(".g.resources", "");
-                              Console.WriteLine($"  Processing XAML: {xamlName}");
-                              
-                              try
-                              {
-                                  using var stream = assembly.GetManifestResourceStream(resourceName);
-                                  if (stream != null)
-                                  {
-                                      // Try to decompile BAML
-                                      var settings = new BamlDecompilerSettings();
-                                      var decompiler = new BamlDecompiler(settings);
-                                      
-                                      // Read the resource
-                                      using var reader = new BinaryReader(stream);
-                                      var resourceData = reader.ReadBytes((int)stream.Length);
-                                      
-                                      // Save raw resource for now
-                                      string outputPath = Path.Combine(outputDir, $"{xamlName}_raw.resources");
-                                      File.WriteAllBytes(outputPath, resourceData);
-                                      Console.WriteLine($"  Saved: {outputPath}");
-                                  }
-                              }
-                              catch (Exception ex)
-                              {
-                                  Console.WriteLine($"  Error: {ex.Message}");
-                              }
-                          }
-                      }
-                  }
-                  catch (Exception ex)
-                  {
-                      Console.WriteLine($"Error: {ex.Message}");
-                      Console.WriteLine(ex.StackTrace);
-                  }
-              }
-          }
-          CSHARP
-          
-          echo "=== Building project ==="
-          dotnet build -c Release
-          
-          echo "=== Decompiling assemblies ==="
-          cd ../..
-          
-          # Find DualSenseX.exe
-          DUALSENSEX_EXE=$(find extracted/ -name "DualSenseX.exe" -type f | head -1)
-          
-          if [ -z "$DUALSENSEX_EXE" ]; then
-            echo "DualSenseX.exe not found!"
-            exit 1
-          fi
-          
-          echo "Found: $DUALSENSEX_EXE"
-          
-          mkdir -p decompiled/DualSenseX/xaml
-          dotnet run --project tools/baml-decompiler -- "$DUALSENSEX_EXE" "decompiled/DualSenseX/xaml" 2>&1 || true
-          
+          echo "=== Results ==="
+          echo "BAML files found: $(find decompiled/ -name '*.baml' | wc -l)"
+          echo "XAML files created: $(find decompiled/ -name '*.xaml' | wc -l)"
           echo "=== Done ==="
 
       - name: Count and summarize results
@@ -270,8 +182,8 @@ jobs:
           total=$(find decompiled/ -name "*.cs" | wc -l)
           echo "Total .cs files: $total"
           echo ""
-          echo "XAML references:"
-          cat decompiled/DualSenseX/xaml/xaml_files.txt 2>/dev/null || echo "  None found"
+          echo "XAML files:"
+          find decompiled/ -name "*.xaml" | sort | head -20
           echo ""
           echo "By project:"
           for dir in decompiled/*/; do
